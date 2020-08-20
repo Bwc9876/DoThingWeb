@@ -1,22 +1,17 @@
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-	</head>
-	{% if len(tasks) == 0 %}
+{% extends "base.html" %} {% block content %}
+	<div>
+	{% if tasklength == 0 %}
 		<h2>You don't have any tasks</h2>
 	{%else%}
-		<div>
-			<table>
-				{%for task in tasks %}
-				<tr>
-					<input type="checkbox", id="{{task.name}}/taskcheck", name="{{task.name}}/taskcheck", value="Done", {% if task.done %} checked {%endif%}>
-					
-					<label for="{{task.name}}/taskcheck">
-				</tr>
-				{% endfor %}
-			</table>
-		</div>	
+		<ul class="list-group list-group-flush">
+			{%for task in tasks %}
+			<li class="list-group-item">
+			<input type="checkbox", id="{{task.name}}/taskcheck", name="{{task.name}}/taskcheck", value="Done", {% if task.done %} checked {%endif%}>
+			<label for="{{task.name}}/taskcheck"> {{task.name}} </label>
+			</li>
+			{% endfor %}
+		</ul>	
 	{% endif %}
-</html>
+	</div>
+{% endblock %}
 	
