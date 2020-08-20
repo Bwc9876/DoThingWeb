@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	</head>
+	{% if len(tasks) == 0 %}
+		<h2>You don't have any tasks</h2>
+	{%else%}
+		<div>
+			<table>
+				{%for task in tasks %}
+				<tr>
+					<input type="checkbox", id="{{task.name}}/taskcheck", name="{{task.name}}/taskcheck", value="Done", {% if task.done %} checked {%endif%}>
+					
+					<label for="{{task.name}}/taskcheck">
+				</tr>
+				{% endfor %}
+			</table>
+		</div>	
+	{% endif %}
+</html>
+	
