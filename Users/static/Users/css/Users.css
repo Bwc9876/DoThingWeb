@@ -1,0 +1,13 @@
+
+.UserForm{
+	margin-left:20vw; 
+	margin-right:20vw; 
+	margin-top:10vh; 
+	text-align:center;
+}
+
+.Heading{
+	text-align:center;
+	border-bottom-style:solid;
+	padding-bottom:10px;
+}
