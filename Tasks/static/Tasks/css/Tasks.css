@@ -1,0 +1,41 @@
+.TaskAddIcon{
+	background-color:none;
+}
+
+.TaskAddIcon:hover{
+	background-color:#79ff4d;
+}
+
+
+.TaskEditIcon{
+    background-color:none;
+}
+
+.TaskEditIcon:hover{
+    background-color:#33ccff;
+}
+
+.TaskDeleteIcon{
+	background-color:none;
+}
+
+.TaskDeleteIcon:hover{
+	background-color:#ff0000;
+}
+
+.AddField{
+	margin-top:16px; 
+	margin-bottom:25px; 
+	margin-left:21px;
+}
+
+.TaskAdd{
+	margin-right:19px; 
+	margin-top:16px; 
+	margin-bottom:25px;
+}
+
+.FloatRight{
+	float: right; 
+	cursor:pointer;
+}

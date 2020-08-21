@@ -68,6 +68,7 @@ function SubmitEdit(taskname){
 		console.log(newname);
 		console.log("[id='" + taskname + "-NameField']");
 		if (newname == ""){
+			console.log('No Name');
 			return;
 		}
 		else if (CheckForInvalidCharacters(newname)){
@@ -114,14 +115,17 @@ function DeleteItem(taskname){
 function ChangeButtonText(id, newtext){
 	$("[id='" + id + "']").html(newtext);
 }
-	
+edit_icon = "https://img.icons8.com/material-sharp/24/000000/edit.png";
+confirm_icon = "https://img.icons8.com/android/24/000000/checkmark.png";
+delete_icon = "https://img.icons8.com/material-rounded/24/000000/empty-trash.png";
+cancel_icon = "https://img.icons8.com/fluent-systems-regular/24/000000/delete-sign.png";
 
 function StartEdit(taskname){
 	$(".TaskEdit").each(function(index, value){
 		EndEdit($(this).attr('task'));
 	});
-	ChangeButtonText(taskname + "-Edit", "Save");
-	ChangeButtonText(taskname + "-Delete", "Cancel");
+	$("[id='" + taskname + "-EditIcon']").attr('src', confirm_icon);
+	$("[id='" + taskname + "-DeleteIcon']").attr('src', cancel_icon);
 	$("[id='" + taskname + "-NameField']").show();
 	UpdateEndEditHandler(taskname);
 	UpdateSubmitEditHandler(taskname);
@@ -129,8 +133,8 @@ function StartEdit(taskname){
 
 
 function EndEdit(taskname){
-	ChangeButtonText(taskname + "-Edit", "Edit");
-	ChangeButtonText(taskname + "-Delete", "Delete");
+	$("[id='" + taskname + "-EditIcon']").attr('src', edit_icon);
+	$("[id='" + taskname + "-DeleteIcon']").attr('src', delete_icon);
 	$("[id='" + taskname + "-NameField']").hide();
 	UpdateStartEditHandler(taskname);
 	UpdateDeleteItemHandler(taskname);

@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from BLib.Files.ReadWrite import GetLinesAsList, Touch
 from BLib.Network.Connection import Connection
+from BLib.Network.Formatting import RemoveNullTerminator
 from urllib.parse import unquote
 
 
@@ -36,7 +37,8 @@ def TokenErrorHandler(code):
 def GetTasks(name, token):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'R/{name}/{token}')
-	code = con.WaitUntilRecv()
+	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
+	print(code)
 	error = TokenErrorHandler(code)
 	if error:
 		return
@@ -55,22 +57,23 @@ def ItemtoText(items):
     return out
 	
 def PushTasks(name, token, item):
-    items = ItemtoText(item)
-    items = items.split('\n')
-    con = Connection('192.168.86.29', 8080)
-    con.Send(f'W/{name}/{token}')
-    code = con.WaitUntilRecv()
-    error = TokenErrorHandler(code)
-    if error:
-        return
-    con.Send('Ready')
-    con.SendList('GO', 'END', items, from_cpp=True)
-    con.Close()
+	items = ItemtoText(item)
+	items = items.split('\n')
+	con = Connection('192.168.86.29', 8080)
+	con.Send(f'W/{name}/{token}')
+	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
+	print(code)
+	error = TokenErrorHandler(code)
+	if error:
+		return
+	con.Send('Ready')
+	con.SendList('GO', 'END', items, from_cpp=True)
+	con.Close()
 	
 def DeleteTasks(name, token):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'D/{name}/{token}')
-	code = con.WaitUntilRecv()
+	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
 	if error:
 		return

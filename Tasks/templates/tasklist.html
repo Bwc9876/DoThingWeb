@@ -4,11 +4,12 @@
 		<h2 style="text-align:center;">You don't have any tasks</h2>
 		<ul class="list-group list-group-flush">
 			<li>
-			<input type="text" class="AddField" id="AddField" name="AddField" style="margin-top:16px; margin-bottom:25px; margin-left:21px;">
-			<button class="TaskAdd btn btn-success btn-sm" id="TaskAdd" type="button" style="float: right; margin-right:19px; margin-top:16px; margin-bottom:25px;">Add</button>
+			<input type="text" class="AddField" id="AddField" name="AddField">
+			<a class="TaskAdd FloatRight" id="TaskAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
 			</li>
 		</ul>	
 	{%else%}
+		
 		<h2 style="text-align:center;">Your tasks</h2>
 		<ul class="list-group list-group-flush">
 			{%for task in tasks %}
@@ -16,13 +17,13 @@
 			<input class="TaskCheck" task="{{task.name}}" type="checkbox", id="{{task.name}}-Check", name="{{task.name}}-Check", value="Done", {% if task.done %} checked {%endif%}>
 			<label for="{{task.name}}-Check"> {{task.name}} </label>
 			<input type="text" class="NameField" id="{{task.name}}-NameField" name="{{task.name}}-NameField">
-			<button class="TaskEdit btn btn-info btn-sm" id="{{task.name}}-Edit" task="{{task.name}}" type="button" style="float: right;">Edit</button>
-			<button class="TaskDelete btn btn-danger btn-sm" id="{{task.name}}-Delete" task="{{task.name}}" type="button" style="float: right;">Delete</button>
+			<a class="TaskEdit FloatRight" id="{{task.name}}-Edit" task="{{task.name}}"><img class="TaskEditIcon" id="{{task.name}}-EditIcon" src="https://img.icons8.com/material-sharp/24/000000/edit.png"/></a>
+			<a class="TaskDelete FloatRight" id="{{task.name}}-Delete" task="{{task.name}}"><img class="TaskDeleteIcon" id="{{task.name}}-DeleteIcon" src="https://img.icons8.com/material-rounded/24/000000/empty-trash.png"></a>
 			</li>
 			{% endfor %}
 			<li>
-			<input type="text" class="AddField" id="AddField" name="AddField" style="margin-top:16px; margin-bottom:25px; margin-left:21px;">
-			<button class="TaskAdd btn btn-success btn-sm" id="TaskAdd" type="button" style="float: right; margin-right:19px; margin-top:16px; margin-bottom:25px;">Add</button>
+			<input type="text" class="AddField" id="AddField" name="AddField">
+			<a class="TaskAdd FloatRight" id="TaskAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
 			</li>
 		</ul>	
 	{% endif %}
