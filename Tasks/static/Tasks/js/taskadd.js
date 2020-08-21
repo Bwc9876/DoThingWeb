@@ -22,10 +22,12 @@ function AddItem(){
 	name = document.getElementById("AddField").value;
 	done = "false";
 	
-	if (name == ""){
+	if (name == "" || name == undefined){
+			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			return;
 		}
 		else if (CheckForInvalidCharacters(name)){
+			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			return;
 		}
 	
@@ -42,7 +44,7 @@ function AddItem(){
 				return;
 			}
 			else{
-				console.log(data);
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + data + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 		});	
 }

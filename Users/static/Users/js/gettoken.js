@@ -16,7 +16,16 @@ function AddLoginHandler(){
 $(".UserLogin").click(function(){
 	username = document.getElementById("UsernameField").value;
 	password = document.getElementById("PasswordField").value;
-	if (username == "" || password == "" || CheckForInvalidCharacters(username)){
+	if (username == ""){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+		return;
+	}
+	if (password == ""){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Password Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+		return;
+	}
+	if (CheckForInvalidCharacters(username)){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 		return;
 	}
 	$.post("request/login", 
@@ -26,10 +35,10 @@ $(".UserLogin").click(function(){
 		},
 		function(data, status){
 			if (data == "IL"){
-				console.log("Invalid Login");
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Username or Password was incorrect" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 			else if (data == "IE"){
-				console.log("Internal Server Error");
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Internal Server Error" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 			else{
 				document.cookie = "username=" + data.split("/")[0] + "; path=/;";
@@ -45,7 +54,16 @@ function AddRegisterHandler(){
 $(".UserRegister").click(function(){
 	username = document.getElementById("UsernameField").value;
 	password = document.getElementById("PasswordField").value;
-	if (username == "" || password == "" || CheckForInvalidCharacters(username)){
+	if (username == ""){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+		return;
+	}
+	if (password.length < 8){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Password Too Short (7> characters)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+		return;
+	}
+	if (CheckForInvalidCharacters(username)){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 		return;
 	}
 	$.post("request/register", 
@@ -55,10 +73,10 @@ $(".UserRegister").click(function(){
 		},
 		function(data, status){
 			if (data == "UE"){
-				console.log("User Exists");
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Username already exists" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 			else if (data == "IE"){
-				console.log("Internal Server Error");
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Internal Server Error" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 			else{
 				document.cookie = "username=" + data.split("/")[0] + "; path=/;";

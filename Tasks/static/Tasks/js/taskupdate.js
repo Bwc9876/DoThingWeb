@@ -63,15 +63,13 @@ function CheckForInvalidCharacters(instr){
 
 
 function SubmitEdit(taskname){
-	//Make it so that later it gets the token/name from cookies and NOT directly 
 		newname = document.getElementById(taskname + "-NameField").value;
-		console.log(newname);
-		console.log("[id='" + taskname + "-NameField']");
-		if (newname == ""){
-			console.log('No Name');
+		if (newname == "" || newname == undefined){
+			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			return;
 		}
 		else if (CheckForInvalidCharacters(newname)){
+			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			return;
 		}
 		$.post("update", 
@@ -88,7 +86,7 @@ function SubmitEdit(taskname){
 				return;
 			}
 			else{
-				console.log(data);
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + data + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 		});	
 }
