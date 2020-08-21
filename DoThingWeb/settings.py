@@ -15,7 +15,9 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
-
+#CSRF_COOKIE_SECURE = False
+#CSRF_COOKIE_HTTPONLY = False
+#SESSION_COOKIE_SECURE = False
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -38,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Tasks.apps.TasksConfig',
+	'Users.apps.UsersConfig',
 ]
 
 MIDDLEWARE = [

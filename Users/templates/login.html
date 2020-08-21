@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block content %}
+
+<div id="UserForm" style="margin-left:510px; margin-right:510px; margin-top:22px; text-align:center;" formtype="Login">
+	<h2 style="text-align:center; border-bottom-style:solid; padding-bottom:10px;"> Login </h2>
+	<div class="form-group align-items-center">
+		<label for="Username">Username</label>
+		<input type="text" class="UsernameField form-control" id="UsernameField" >
+	</div>
+	<div class="form-group align-items-center">
+		<label for="exampleInputPassword1">Password</label>
+		<input type="password" class="form-control" id="PasswordField">
+	</div>
+	<button class="UserLogin btn btn-info btn-block"type="button">Login</button>
+	<p>Don't have an account? <a href="register">Register</a></p>
+</div>
+
+{% endblock %}
