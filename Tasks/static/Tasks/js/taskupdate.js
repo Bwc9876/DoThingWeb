@@ -6,6 +6,7 @@ function CreateCheckHandler(){
 		{
 			taskname: $(this).attr('task'),
 			done: $(this).is(':checked'),
+			group: $(this).attr('group'),
 			name: Cookies.get("username"),
 			token: Cookies.get("token"),
 		});	
@@ -20,7 +21,7 @@ function CreateStartEditHandler(){
 
 function CreateDeleteItemHandler(){
 	$(".TaskDelete").unbind().click(function(){
-		DeleteItem($(this).attr('task'));
+		DeleteItem($(this).attr('task'), $(this).attr('group'));
 	});
 }
 
@@ -32,7 +33,7 @@ function UpdateStartEditHandler(taskname){
 
 function UpdateDeleteItemHandler(taskname){
 	$("[id='" + taskname + "-Delete']").unbind().click(function(){
-		DeleteItem($(this).attr('task'));
+		DeleteItem($(this).attr('task'), $(this).attr('group'));
 	});
 }
 
@@ -77,6 +78,7 @@ function SubmitEdit(taskname){
 			newname: newname,
 			taskname: $("[id='" + taskname + "-Edit']").attr('task'),
 			done: $("[id='" + taskname + "-Check']").is(':checked'),
+			group: $("[id='" + taskname + "-Edit']").attr('group'),
 			name: Cookies.get("username"),
 			token: Cookies.get("token"),
 		},
@@ -91,12 +93,13 @@ function SubmitEdit(taskname){
 		});	
 }
 
-function DeleteItem(taskname){
+function DeleteItem(taskname, groupname){
 	//Make it so that later it gets the token/name from cookies and NOT directly 
 		$.post("remove", 
 		{
 			taskname: encodeURIComponent($("[id='" + taskname + "-Delete']").attr('task')),
 			name: Cookies.get("username"),
+			group: groupname,
 			token: Cookies.get("token"),
 		},
 		function(data, status){
@@ -105,7 +108,7 @@ function DeleteItem(taskname){
 				return;
 			}
 			else{
-				console.log(data);
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + data + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 		});	
 }

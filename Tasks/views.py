@@ -22,6 +22,13 @@ class Task:
 	def __str__(self):
 		return self.name
 		
+class Group:
+	def __init__(self, name, items):
+		self.name = name
+		self.items = items
+	def __str__(self):
+		return self.name
+		
 		
 def TokenErrorHandler(code):
     errors = {
@@ -34,9 +41,9 @@ def TokenErrorHandler(code):
     except KeyError:
         return False
 
-def GetTasks(name, token):
+def GetTasks(name, token, group):
 	con = Connection('192.168.86.29', 8080)
-	con.Send(f'R/{name}/{token}')
+	con.Send(f'R/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	print(code)
 	error = TokenErrorHandler(code)
@@ -47,6 +54,19 @@ def GetTasks(name, token):
 	con.Close()
 	return updated_items
 	
+def GetGroups(name, token):
+	con = Connection('192.168.86.29', 8080)
+	con.Send(f'G/{name}/NULL/{token}')
+	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
+	print(code)
+	error = TokenErrorHandler(code)
+	if error:
+		return
+	con.Send('Ready')
+	groups = con.RecvList('GO', 'END')
+	con.Close()
+	return groups
+	
 def ItemtoText(items):
     out = ''
     for i in items:
@@ -56,11 +76,11 @@ def ItemtoText(items):
             out += f'\n{i.name},{i.done}'
     return out
 	
-def PushTasks(name, token, item):
+def PushTasks(name, token, group, item):
 	items = ItemtoText(item)
 	items = items.split('\n')
 	con = Connection('192.168.86.29', 8080)
-	con.Send(f'W/{name}/{token}')
+	con.Send(f'W/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	print(code)
 	error = TokenErrorHandler(code)
@@ -70,9 +90,22 @@ def PushTasks(name, token, item):
 	con.SendList('GO', 'END', items, from_cpp=True)
 	con.Close()
 	
-def DeleteTasks(name, token):
+def RenameGroup(name, token, group, newname):
 	con = Connection('192.168.86.29', 8080)
-	con.Send(f'D/{name}/{token}')
+	con.Send(f'N/{name}/{group}/{token}')
+	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
+	print(code)
+	error = TokenErrorHandler(code)
+	if error:
+		return
+	con.Send('Ready')
+	con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
+	con.Send(newname)
+	con.Close()
+	
+def DeleteTasks(name, group, token):
+	con = Connection('192.168.86.29', 8080)
+	con.Send(f'D/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
 	if error:
@@ -89,8 +122,9 @@ def updatetask(request):
 			newname = ToUpdate
 		username = request.POST.get("name", "")
 		token = request.POST.get("token", "")
+		group = request.POST.get("group", "")
 		done = request.POST.get("done", "")
-		tasksraw = GetTasks(username, token)
+		tasksraw = GetTasks(username, token, group)
 		tasks = []
 		#Add Auth server and login stuff here
 		for rawtask in tasksraw:
@@ -103,7 +137,7 @@ def updatetask(request):
 			return HttpResponse("No Item By That Name")
 		ToUpdate.name = newname
 		ToUpdate.done = truefalse[done]
-		PushTasks(username, token, tasks)
+		PushTasks(username, token, group, tasks)
 		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
@@ -114,7 +148,8 @@ def addtask(request):
 		username = request.POST.get("name", "")
 		token = request.POST.get("token", "")
 		done = request.POST.get("done", "")
-		tasksraw = GetTasks(username, token)
+		group = request.POST.get("group", "")
+		tasksraw = GetTasks(username, token, group)
 		tasks = []
 		#Add Auth server and login stuff here
 		for rawtask in tasksraw:
@@ -123,7 +158,7 @@ def addtask(request):
 		tasks += [Task(ToUpdate, truefalse[done])]
 		if '' in tasks:
 			tasks.remove('')
-		PushTasks(username, token, tasks)
+		PushTasks(username, token, group, tasks)
 		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
@@ -134,8 +169,9 @@ def removetask(request):
 		ToDelete = unquote(ToDelete)
 		username = request.POST.get("name", "")
 		token = request.POST.get("token", "")
+		group = request.POST.get("group", "")
 		print(f'TODELETE: {ToDelete}')
-		tasksraw = GetTasks(username, token)
+		tasksraw = GetTasks(username, token, group)
 		tasks = []
 		#Add Auth server and login stuff here
 		for rawtask in tasksraw:
@@ -153,13 +189,24 @@ def removetask(request):
 			DeleteTasks(username, token)
 			return HttpResponse("Success")
 		else:
-			PushTasks(username, token, tasks)
+			PushTasks(username, token, group, tasks)
 			return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
 	
 		
 		
+def renamegroup(request):
+	if request.method == 'POST':
+		newname = request.POST.get("newname", "")
+		print(newname)
+		username = request.POST.get("name", "")
+		token = request.POST.get("token", "")
+		group = request.POST.get("group", "")
+		RenameGroup(username, token, group, newname)
+		return HttpResponse("Success")
+	else:
+		return HttpResponse("Non-Post Request")
 
 
 def index(request):
@@ -170,11 +217,20 @@ def index(request):
 	token = request.COOKIES.get('token')
 	if not token:
 		return redirect('/users/login')
-	tasksraw = GetTasks(user, token)
-	tasks = []
-	#Add Auth server and login stuff here
-	for rawtask in tasksraw:
-		tasklist = rawtask.split(',')
-		tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
-	tasklength = len(tasks)
-	return render(request, 'tasklist.html', {'tasks' : tasks, 'name' : user, 'tasklength' : tasklength, 'needed': ["Tasks/js/taskadd.js", "Tasks/js/taskupdate.js", "Tasks/js/js.cookie.min.js"]})
+	print(token)
+	groups = []
+	groupsraw = GetGroups(user, token)
+	for group in groupsraw:
+		tasksraw = GetTasks(user, token, group)
+		tasks = []
+		#Add Auth server and login stuff here
+		for rawtask in tasksraw:
+			tasklist = rawtask.split(',')
+			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
+		groups += [Group(group, tasks)]
+		tasklength = 1
+	for i in groups:
+		for g in i.items:
+			print(f'{i}-{g}-{g.done}')
+	grouplength = len(groups)
+	return render(request, 'tasklist.html', {'groups' : groups, 'name' : user, 'grouplength' : grouplength, 'needed': ["Tasks/js/taskadd.js", "Tasks/js/taskupdate.js", "Tasks/js/js.cookie.min.js", "Tasks/js/groupedit.js", "Tasks/js/sorts.js", "Tasks/js/jquery-sortable.js"]})

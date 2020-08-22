@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block content %}
 	<div id="PageContainer">
-	{% if tasklength == 0 %}
+	<div class="ItemsDiv">
+	{% if grouplength == 0 %}
 		<h2 style="text-align:center;">You don't have any tasks</h2>
 		<ul class="list-group list-group-flush">
 			<li>
@@ -11,22 +12,46 @@
 	{%else%}
 		
 		<h2 style="text-align:center;">Your tasks</h2>
-		<ul class="list-group list-group-flush">
-			{%for task in tasks %}
-			<li class="list-group-item">
-			<input class="TaskCheck" task="{{task.name}}" type="checkbox", id="{{task.name}}-Check", name="{{task.name}}-Check", value="Done", {% if task.done %} checked {%endif%}>
-			<label for="{{task.name}}-Check"> {{task.name}} </label>
-			<input type="text" class="NameField" id="{{task.name}}-NameField" name="{{task.name}}-NameField">
-			<a class="TaskEdit FloatRight" id="{{task.name}}-Edit" task="{{task.name}}"><img class="TaskEditIcon" id="{{task.name}}-EditIcon" src="https://img.icons8.com/material-sharp/24/000000/edit.png"/></a>
-			<a class="TaskDelete FloatRight" id="{{task.name}}-Delete" task="{{task.name}}"><img class="TaskDeleteIcon" id="{{task.name}}-DeleteIcon" src="https://img.icons8.com/material-rounded/24/000000/empty-trash.png"></a>
-			</li>
+		<div class="accordian list-group GroupList" id="grouplist">
+			{% for group in groups %}
+				<div class="card list-item" draggable=false>
+					<div class="card-header" id="{{group.name}}-header">
+					  <h2 class="mb-0">
+						<button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#{{group.name}}-collapse" aria-expanded="true" aria-controls="{{group.name}}-collapse">
+							{{group.name}}
+						</button>
+						<input type="text" class="NameField" id="GROUP-{{group.name}}-NameField" name="GROUP-{{group.name}}-NameField">
+						<a class="GroupEdit FloatRight" id="{{group.name}}-Edit" group="{{group.name}}" ><img class="GroupEditIcon" id="{{group.name}}-EditIcon" src="https://img.icons8.com/material-sharp/24/000000/edit.png"/></a>
+						<a class="GroupDelete FloatRight" id="{{group.name}}-Delete" group="{{group.name}}"><img class="GroupDeleteIcon" id="{{group.name}}-DeleteIcon" src="https://img.icons8.com/material-rounded/24/000000/empty-trash.png"></a>
+					  </h2>
+					</div>
+
+					<div id="{{group.name}}-collapse" class="collapse show" aria-labelledby="{{group.name}}-header">
+					  <div class="card-body">
+							<div class="list-group list-group-flush TaskList" id="{{group.name}}-List">
+								{% for task in group.items %}
+								<div class="list-group-item" draggable=false>
+								<span class="handle"><img src="https://img.icons8.com/fluent-systems-filled/20/000000/move.png"/></span>
+								<input class="TaskCheck" task="{{task.name}}" type="checkbox", id="{{task.name}}-Check", group="{{group.name}}" name="{{task.name}}-Check", value="Done", {% if task.done %} checked {%endif%}>
+								<label for="{{task.name}}-Check"> {{task.name}} </label>
+								<input type="text" class="NameField" id="{{task.name}}-NameField" name="{{task.name}}-NameField">
+								<a  class="TaskEdit FloatRight" id="{{task.name}}-Edit" group="{{group.name}}" task="{{task.name}}"><img class="TaskEditIcon" id="{{task.name}}-EditIcon" src="https://img.icons8.com/material-sharp/24/000000/edit.png"/></a>
+								<a  class="TaskDelete FloatRight" id="{{task.name}}-Delete" group="{{group.name}}" task="{{task.name}}"><img class="TaskDeleteIcon" id="{{task.name}}-DeleteIcon" src="https://img.icons8.com/material-rounded/24/000000/empty-trash.png"></a>
+								</div>
+								{% endfor %}
+								<div class="list-group-item filtered disabled">
+								<input type="text" group="{{group.name}}" class="AddField" id="{{group.name}}-AddField" name="AddField">
+								<a class="TaskAdd FloatRight" group="{{group.name}}" id="{{group.name}}-TaskAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
+								</dive>
+							</div>
+					  </div>
+					</div>
+				</div>
+				</div>
 			{% endfor %}
-			<li>
-			<input type="text" class="AddField" id="AddField" name="AddField">
-			<a class="TaskAdd FloatRight" id="TaskAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
-			</li>
-		</ul>	
+		</div>
 	{% endif %}
+	</div>
 	</div>
 {% endblock %}
 	

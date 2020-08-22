@@ -1,3 +1,35 @@
+.ItemsDiv{
+	margin-left:10vw; 
+	margin-right:10vw; 
+	margin-top:5vh; 
+}
+
+.GroupAddIcon{
+	background-color:none;
+}
+
+.GroupAddIcon:hover{
+	background-color:#79ff4d;
+}
+
+
+.GroupEditIcon{
+    background-color:none;
+}
+
+.GroupEditIcon:hover{
+    background-color:#33ccff;
+}
+
+.TaskDeleteIcon{
+	background-color:none;
+}
+
+.GroupDeleteIcon:hover{
+	background-color:#ff0000;
+}
+
+
 
 .TaskAddIcon{
 	background-color:none;

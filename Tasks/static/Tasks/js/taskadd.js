@@ -13,13 +13,13 @@ function CheckForInvalidCharacters(instr){
 }
 
 function AddItemAddHandler(){
-	$("#TaskAdd").click(function(){
-		AddItem();
+	$(".TaskAdd").click(function(){
+		AddItem($(this).attr("group"));
 	});
 }
 
-function AddItem(){
-	name = document.getElementById("AddField").value;
+function AddItem(groupname){
+	name = document.getElementById(groupname + "-AddField").value;
 	done = "false";
 	
 	if (name == "" || name == undefined){
@@ -36,6 +36,7 @@ function AddItem(){
 			taskname: name,
 			done: done,
 			name: Cookies.get("username"),
+			group: groupname,
 			token: Cookies.get("token"),
 		},
 		function(data, status){
