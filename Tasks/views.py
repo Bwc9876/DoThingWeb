@@ -232,11 +232,13 @@ def addtask(request):
 		group = request.POST.get("group", "")
 		tasksraw = GetTasks(username, token, group)
 		pos = tasksraw.pop(0)
+		print(tasksraw)
 		tasks = []
-		#Add Auth server and login stuff here
-		for rawtask in tasksraw:
-			tasklist = rawtask.split(',')
-			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
+		if not tasksraw[0] == "NONE":
+			#Add Auth server and login stuff here
+			for rawtask in tasksraw:
+				tasklist = rawtask.split(',')
+				tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
 		tasks += [Task(ToUpdate, truefalse[done])]
 		if '' in tasks:
 			tasks.remove('')

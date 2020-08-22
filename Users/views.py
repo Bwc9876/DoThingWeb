@@ -61,15 +61,16 @@ def UserRegister(request):
 	
 	if not error:
 		con = Connection('192.168.86.29', 8080)
-		con.Send(f'N/{username}/NULL/{token}')
-		code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
-		print(code)
-		error = TokenErrorHandler(code)
+		con.Send(f'U/{username}/NULL/{token}')
+		errorcode = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
+		print(errorcode)
+		errorcode = TokenErrorHandler(code)
 		if error:
 			return
 		con.Send('Ready')
 		con.Close()
 	
+	print(code)
 	return HttpResponse(code)
 
 def LoginPage(request):

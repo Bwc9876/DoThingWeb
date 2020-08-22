@@ -40,6 +40,7 @@ function AddItem(groupname){
 		},
 		function(data, status){
 			if (data == "Success"){
+				window.location.reload(true);
 				return;
 			}
 			else{
