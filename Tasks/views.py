@@ -83,7 +83,7 @@ def PushTasks(name, token, group, item, pos):
 		items = items.split('\n')
 	else:
 		items = ["NONE"]
-	items.insert(0, pos)
+	items.insert(0, str(pos))
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'W/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
@@ -121,6 +121,8 @@ def DeleteTasks(name, group, token):
 def GetAllGroups(username, token, sort=True):
 	groups = []
 	groupsraw = GetGroups(username, token)
+	if groupsraw is None:
+		return []
 	for group in groupsraw:
 		tasksraw = GetTasks(username, token, group)
 		pos = tasksraw.pop(0)
@@ -138,6 +140,8 @@ def GetAllGroups(username, token, sort=True):
 			print(f'{i}-{g}-{g.done}')
 	if len(groups) > 1 and sort:
 		groups.sort(key=lambda x: x.position)
+	if groups is None:
+		groups = []
 	return groups
 	
 def UpdateItemOrder(request):
@@ -269,7 +273,16 @@ def removetask(request):
 	else:
 		return HttpResponse("Non-Post Request")
 	
-		
+def creategroup(request):
+	if request.method == 'POST':
+		username = request.POST.get("name", "")
+		token = request.POST.get("token", "")
+		group = request.POST.get("group", "")
+		groups = GetAllGroups(username, token)
+		PushTasks(username, token, group, [], len(groups) + 1)
+		return HttpResponse("Success")
+	else:
+		return HttpResponse("Non-Post Request")
 		
 def renamegroup(request):
 	if request.method == 'POST':
@@ -282,7 +295,17 @@ def renamegroup(request):
 		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
-
+		
+		
+def delete_group(request):
+	if request.method == 'POST':
+		username = request.POST.get("name", "")
+		token = request.POST.get("token", "")
+		group = request.POST.get("group", "")
+		DeleteTasks(username, group, token)
+		return HttpResponse("Success")
+	else:
+		return HttpResponse("Non-Post Request")
 
 def index(request):
 	user = request.COOKIES.get('username')

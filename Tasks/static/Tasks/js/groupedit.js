@@ -1,3 +1,70 @@
+function AddGroup(){
+	name = document.getElementById("GroupAddField").value;
+	done = "false";
+	
+	if (name == "" || name == undefined){
+			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+			return;
+		}
+		else if (CheckForInvalidCharacters(name)){
+			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+			return;
+		}
+	
+	$.post("add_group", 
+		{
+			group: name,
+			name: Cookies.get("username"),
+			token: Cookies.get("token"),
+		},
+		function(data, status){
+			if (data == "Success"){
+				window.location.reload(true);
+			}
+			else{
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + data + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+			}
+		});	
+}
+
+function DeleteGroup(groupname){
+		$.post("remove_group", 
+		{
+			group: groupname,
+			name: Cookies.get("username"),
+			token: Cookies.get("token"),
+		},
+		function(data, status){
+			if (data == "Success"){
+				$("[id='" + groupname + "-Card']").remove()
+				return;
+			}
+			else{
+				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + data + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+			}
+		});	
+}
+
+function CreateGroupDeleteHandler(){
+	$(".GroupDelete").unbind().click(function(){
+		DeleteGroup($(this).attr("group"));
+	});
+}
+
+function UpdateGroupDeleteHandler(groupname){
+	$("[id='" + groupname + "-GroupDelete']").unbind().click(function(){
+		DeleteGroup($(this).attr("group"));
+	});
+}
+
+
+function CreateGroupAddHandler(){
+	$(".GroupAdd").unbind().click(function(){
+		AddGroup();
+	});
+}
+
+
 function CreateStartGroupEditHandler(){
 	$(".GroupEdit").unbind().click(function(){
 		StartGroupEdit($(this).attr("group"));
@@ -5,19 +72,19 @@ function CreateStartGroupEditHandler(){
 }
 
 function UpdateStartGroupEditHandler(groupname){
-	$("[id='" + groupname + "-Edit']").unbind().click(function(){
+	$("[id='" + groupname + "-GroupEdit']").unbind().click(function(){
 		StartGroupEdit($(this).attr('group'));
 	});
 }
 
 function UpdateEndGroupEditHandler(groupname){
-	$("[id='" + groupname + "-Delete']").unbind().click(function(){
+	$("[id='" + groupname + "-GroupDelete']").unbind().click(function(){
 		EndGroupEdit($(this).attr('group'));
 	});
 }
 
 function UpdateSubmitGroupEditHandler(groupname){
-	$("[id='" + groupname + "-Edit']").unbind().click(function(){
+	$("[id='" + groupname + "-GroupEdit']").unbind().click(function(){
 		SubmitGroupEdit($(this).attr('group'));
 	});
 }
@@ -90,6 +157,7 @@ function EndGroupEdit(groupname){
 	$("[id='" + groupname + "-DeleteIcon']").attr('src', delete_icon);
 	$("[id='GROUP-" + groupname + "-NameField']").hide();
 	UpdateStartGroupEditHandler(groupname);
+	UpdateGroupDeleteHandler(groupname);
 }
 
 
@@ -97,5 +165,7 @@ function EndGroupEdit(groupname){
 
 $(document).ready(function(){
 	CreateStartGroupEditHandler();
-	$(".NameField").hide();
+	CreateGroupAddHandler();
+	CreateGroupDeleteHandler();
+	$(".GroupAddField").hide();
 });

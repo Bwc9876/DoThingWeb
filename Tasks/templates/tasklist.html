@@ -3,12 +3,8 @@
 		<div class="ItemsDiv">
 		{% if grouplength == 0 %}
 			<h2 style="text-align:center;">You don't have any tasks</h2>
-			<ul class="list-group list-group-flush">
-				<li>
-				<input type="text" class="AddField" id="AddField" name="AddField">
-				<a class="TaskAdd FloatRight" id="TaskAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
-				</li>
-			</ul>	
+			<input type="text" class="AddField" id="GroupAddField" name="GroupAddField">
+			<a class="GroupAdd FloatRight" id="GroupAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
 		{%else%}
 			
 			<h2 style="text-align:center;">Your tasks</h2>
@@ -22,8 +18,8 @@
 								{{group.name}}
 							</button>
 							<input type="text" class="NameField" id="GROUP-{{group.name}}-NameField" name="GROUP-{{group.name}}-NameField">
-							<a class="GroupEdit FloatRight" id="{{group.name}}-Edit" group="{{group.name}}" ><img class="GroupEditIcon" id="{{group.name}}-EditIcon" src="https://img.icons8.com/material-sharp/24/000000/edit.png"/></a>
-							<a class="GroupDelete FloatRight" id="{{group.name}}-Delete" group="{{group.name}}"><img class="GroupDeleteIcon" id="{{group.name}}-DeleteIcon" src="https://img.icons8.com/material-rounded/24/000000/empty-trash.png"></a>
+							<a class="GroupEdit FloatRight" id="{{group.name}}-GroupEdit" group="{{group.name}}" ><img class="GroupEditIcon" id="{{group.name}}-EditIcon" src="https://img.icons8.com/material-sharp/24/000000/edit.png"/></a>
+							<a class="GroupDelete FloatRight" id="{{group.name}}-GroupDelete" group="{{group.name}}"><img class="GroupDeleteIcon" id="{{group.name}}-DeleteIcon" src="https://img.icons8.com/material-rounded/24/000000/empty-trash.png"></a>
 						  </h2>
 						</div>
 
@@ -50,6 +46,8 @@
 					</div>
 				{% endfor %}
 			</div>
+			<input type="text" class="AddField" id="GroupAddField" name="GroupAddField">
+			<a class="GroupAdd FloatRight" id="GroupAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
 		{% endif %}
 		</div>
 	</div>
