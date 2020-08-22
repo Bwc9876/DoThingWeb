@@ -1,7 +1,60 @@
+function HandleChanges(oldname, newname, type){
+	if (type == "task"){
+		$(".change-task[task='" + oldname + "']").each(function(){
+			$(this).attr("task", newname);
+			suffix = $(this).attr('suffix');
+			if (suffix != undefined){
+				$(this).attr('id', newname + "-" + suffix);
+			}
+			fo = $(this).attr("for");
+			if (fo != undefined){
+				$(this).attr("for", newname + "-" + suffix)
+			}
+			name = $(this).attr("name");
+			if (name != undefined){
+				$(this).attr("name", newname + "-" + suffix)
+			}
+			datatarget = $(this).attr("data-target");
+			if (datatarget != undefined){
+				$(this).attr("name", "#" + newname + "-" + suffix)
+			}
+			ariacontrols = $(this).attr("aria-controls");
+			if (ariacontrols != undefined){
+				$(this).attr("name", newname + "-" + suffix)
+			}
+		});
+	}
+	else if (type == "group"){
+		$(".change-group[group='" + oldname + "']").each(function(){
+			$(this).attr("group", newname);
+			suffix = $(this).attr('suffix');
+			id = $(this).attr('id');
+			if (suffix != undefined && id != undefined){
+				$(this).attr('id', newname + "-" + suffix);
+			}
+			fo = $(this).attr("for");
+			if (fo != undefined){
+				$(this).attr("for", newname + "-" + suffix)
+			}
+			name = $(this).attr("name");
+			if (name != undefined){
+				$(this).attr("name", newname + "-" + suffix)
+			}
+			datatarget = $(this).attr("data-target");
+			if (datatarget != undefined){
+				$(this).attr("name", "#" + newname + "-" + suffix)
+			}
+			ariacontrols = $(this).attr("aria-controls");
+			if (ariacontrols != undefined){
+				$(this).attr("name", newname + "-" + suffix)
+			}
+		});
+	}
+}
+
 
 function CreateCheckHandler(){
 	$(".TaskCheck").change(function(){
-		console.log(Cookies.get("token"));
 		$.post("update", 
 		{
 			taskname: $(this).attr('task'),
@@ -94,7 +147,6 @@ function SubmitEdit(taskname){
 }
 
 function DeleteItem(taskname, groupname){
-	//Make it so that later it gets the token/name from cookies and NOT directly 
 		$.post("remove", 
 		{
 			taskname: encodeURIComponent($("[id='" + taskname + "-Delete']").attr('task')),
@@ -104,7 +156,7 @@ function DeleteItem(taskname, groupname){
 		},
 		function(data, status){
 			if (data == "Success"){
-				window.location.reload(true);
+				$(".list-group-item[task='" + taskname + "']").remove();
 				return;
 			}
 			else{
@@ -122,6 +174,7 @@ delete_icon = "https://img.icons8.com/material-rounded/24/000000/empty-trash.png
 cancel_icon = "https://img.icons8.com/fluent-systems-regular/24/000000/delete-sign.png";
 
 function StartEdit(taskname){
+	console.log("Start Edit");
 	$(".TaskEdit").each(function(index, value){
 		EndEdit($(this).attr('task'));
 	});

@@ -9,4 +9,6 @@ urlpatterns = [
 	path('add', csrf_exempt(views.addtask), name='add'),
 	path('remove', csrf_exempt(views.removetask), name='remove'),
 	path('group_update', csrf_exempt(views.renamegroup), name='rename'),
+	path('group_order_update', csrf_exempt(views.UpdateGroupOrder), name='group_order'),
+	path('item_order_update', csrf_exempt(views.UpdateItemOrder), name='item_order'),
 ]

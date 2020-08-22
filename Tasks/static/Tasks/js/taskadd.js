@@ -1,5 +1,4 @@
 
-
 function CheckForInvalidCharacters(instr){
 	not_allowed = ['/', '.', ',', ':', ';', '"', "'", '\\', '|', '+', '=', '_', '~', '`'];
 	for (i=0; i<not_allowed.length; i++){
@@ -41,7 +40,6 @@ function AddItem(groupname){
 		},
 		function(data, status){
 			if (data == "Success"){
-				window.location.reload(true);
 				return;
 			}
 			else{

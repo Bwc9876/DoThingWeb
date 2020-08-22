@@ -1,36 +1,24 @@
-function CreateStartEditHandler(){
+function CreateStartGroupEditHandler(){
 	$(".GroupEdit").unbind().click(function(){
-		StartEdit($(this).attr("group"));
+		StartGroupEdit($(this).attr("group"));
 	});
 }
 
-function CreateDeleteItemHandler(){
-	$(".GroupDelete").unbind().click(function(){
-		DeleteItem($(this).attr('group'));
-	});
-}
-
-function UpdateStartEditHandler(groupname){
+function UpdateStartGroupEditHandler(groupname){
 	$("[id='" + groupname + "-Edit']").unbind().click(function(){
-		StartEdit($(this).attr('group'));
+		StartGroupEdit($(this).attr('group'));
 	});
 }
 
-function UpdateDeleteItemHandler(groupname){
+function UpdateEndGroupEditHandler(groupname){
 	$("[id='" + groupname + "-Delete']").unbind().click(function(){
-		DeleteItem($(this).attr('group'));
+		EndGroupEdit($(this).attr('group'));
 	});
 }
 
-function UpdateEndEditHandler(groupname){
-	$("[id='" + groupname + "-Delete']").unbind().click(function(){
-		EndEdit($(this).attr('group'));
-	});
-}
-
-function UpdateSubmitEditHandler(groupname){
+function UpdateSubmitGroupEditHandler(groupname){
 	$("[id='" + groupname + "-Edit']").unbind().click(function(){
-		SubmitEdit($(this).attr('group'));
+		SubmitGroupEdit($(this).attr('group'));
 	});
 }
 
@@ -48,7 +36,7 @@ function CheckForInvalidCharacters(instr){
 
 
 
-function SubmitEdit(groupname){
+function SubmitGroupEdit(groupname){
 		newname = document.getElementById("GROUP-" + groupname + "-NameField").value;
 		if (newname == "" || newname == undefined){
 			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
@@ -85,32 +73,29 @@ confirm_icon = "https://img.icons8.com/android/24/000000/checkmark.png";
 delete_icon = "https://img.icons8.com/material-rounded/24/000000/empty-trash.png";
 cancel_icon = "https://img.icons8.com/fluent-systems-regular/24/000000/delete-sign.png";
 
-function StartEdit(groupname){
+function StartGroupEdit(groupname){
 	$(".GroupEdit").each(function(index, value){
-		EndEdit($(this).attr('task'));
+		EndGroupEdit($(this).attr('task'));
 	});
 	$("[id='" + groupname + "-EditIcon']").attr('src', confirm_icon);
 	$("[id='" + groupname + "-DeleteIcon']").attr('src', cancel_icon);
 	$("[id='GROUP-" + groupname + "-NameField']").show();
-	UpdateEndEditHandler(groupname);
-	UpdateSubmitEditHandler(groupname);
+	UpdateEndGroupEditHandler(groupname);
+	UpdateSubmitGroupEditHandler(groupname);
 }
 
 
-function EndEdit(groupname){
+function EndGroupEdit(groupname){
 	$("[id='" + groupname + "-EditIcon']").attr('src', edit_icon);
 	$("[id='" + groupname + "-DeleteIcon']").attr('src', delete_icon);
 	$("[id='GROUP-" + groupname + "-NameField']").hide();
-	UpdateStartEditHandler(groupname);
-	UpdateDeleteItemHandler(groupname);
+	UpdateStartGroupEditHandler(groupname);
 }
 
 
 
 
 $(document).ready(function(){
-	CreateCheckHandler();
-	CreateStartEditHandler();
-	CreateDeleteItemHandler();
+	CreateStartGroupEditHandler();
 	$(".NameField").hide();
 });

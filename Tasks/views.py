@@ -23,9 +23,10 @@ class Task:
 		return self.name
 		
 class Group:
-	def __init__(self, name, items):
+	def __init__(self, name, items, position):
 		self.name = name
 		self.items = items
+		self.position = position
 	def __str__(self):
 		return self.name
 		
@@ -76,9 +77,13 @@ def ItemtoText(items):
             out += f'\n{i.name},{i.done}'
     return out
 	
-def PushTasks(name, token, group, item):
-	items = ItemtoText(item)
-	items = items.split('\n')
+def PushTasks(name, token, group, item, pos):
+	if not len(item) == 0:
+		items = ItemtoText(item)
+		items = items.split('\n')
+	else:
+		items = ["NONE"]
+	items.insert(0, pos)
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'W/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
@@ -113,6 +118,77 @@ def DeleteTasks(name, group, token):
 	con.Send('Ready')
 	con.Close()
 	
+def GetAllGroups(username, token, sort=True):
+	groups = []
+	groupsraw = GetGroups(username, token)
+	for group in groupsraw:
+		tasksraw = GetTasks(username, token, group)
+		pos = tasksraw.pop(0)
+		if tasksraw[0] == "NONE":
+			groups += [Group(group, [], int(pos))]
+			continue
+		tasks = []
+		for rawtask in tasksraw:
+			tasklist = rawtask.split(',')
+			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
+		groups += [Group(group, tasks, int(pos))]
+		tasklength = 1
+	for i in groups:
+		for g in i.items:
+			print(f'{i}-{g}-{g.done}')
+	if len(groups) > 1 and sort:
+		groups.sort(key=lambda x: x.position)
+	return groups
+	
+def UpdateItemOrder(request):
+	if request.method == 'POST':
+		token = request.POST.get("token", "")
+		username = request.POST.get("name", "")
+		newgroups = request.POST.get("newgroups" , "")
+		oldgroups = GetAllGroups(username, token)
+		masteritems = []
+		for i in oldgroups:
+			masteritems += i.items
+		itemdict = {}
+		for i in masteritems:
+			itemdict[i.name] = i
+		newgroups = newgroups.split('/')
+		newgroupobjects = []
+		for i in newgroups:
+			name = i.split(':')[0]
+			pos = i.split(':')[1]
+			items = i.split(':')[2]
+			itemobjects = []
+			for i in items.split(','):
+				if not i == '':
+					itemobjects += [itemdict[i]]
+			newgroupobjects += [Group(name, itemobjects, pos)]
+		for i in newgroupobjects:
+			print(f'{i.name}-{i.items}')
+			PushTasks(username, token, i.name, i.items, i.position)
+		return HttpResponse("Success")
+	else:
+		return HttpResponse("Non-Post Request")
+	
+def UpdateGroupOrder(request):
+	if request.method == 'POST':
+		token = request.POST.get("token", "")
+		username = request.POST.get("name", "")
+		newgroups = request.POST.get("newgroups" , "")
+		oldgroups = GetAllGroups(username, token)
+		newgroups = newgroups.split('/')
+		groupdict = {}
+		for i in oldgroups:
+			groupdict[i.name] = i
+		for i in newgroups:
+			partner = groupdict[i.split(':')[0]]
+			partner.pos = i.split(':')[1]
+		for i in oldgroups:
+			PushTasks(username, token, i.name, i.items, i.pos)
+		return HttpResponse("Success")
+	else:
+		return HttpResponse("Non-Post Request")
+	
 def updatetask(request):
 	if request.method == 'POST':
 		ToUpdate = request.POST.get("taskname", "")
@@ -125,6 +201,7 @@ def updatetask(request):
 		group = request.POST.get("group", "")
 		done = request.POST.get("done", "")
 		tasksraw = GetTasks(username, token, group)
+		pos = tasksraw.pop(0)
 		tasks = []
 		#Add Auth server and login stuff here
 		for rawtask in tasksraw:
@@ -137,7 +214,7 @@ def updatetask(request):
 			return HttpResponse("No Item By That Name")
 		ToUpdate.name = newname
 		ToUpdate.done = truefalse[done]
-		PushTasks(username, token, group, tasks)
+		PushTasks(username, token, group, tasks, pos)
 		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
@@ -150,6 +227,7 @@ def addtask(request):
 		done = request.POST.get("done", "")
 		group = request.POST.get("group", "")
 		tasksraw = GetTasks(username, token, group)
+		pos = tasksraw.pop(0)
 		tasks = []
 		#Add Auth server and login stuff here
 		for rawtask in tasksraw:
@@ -158,7 +236,7 @@ def addtask(request):
 		tasks += [Task(ToUpdate, truefalse[done])]
 		if '' in tasks:
 			tasks.remove('')
-		PushTasks(username, token, group, tasks)
+		PushTasks(username, token, group, tasks, pos)
 		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
@@ -173,6 +251,7 @@ def removetask(request):
 		print(f'TODELETE: {ToDelete}')
 		tasksraw = GetTasks(username, token, group)
 		tasks = []
+		pos = tasksraw.pop(0)
 		#Add Auth server and login stuff here
 		for rawtask in tasksraw:
 			tasklist = rawtask.split(',')
@@ -185,12 +264,8 @@ def removetask(request):
 		tasks.remove(ToDelete)
 		if '' in tasks:
 			tasks.remove('')
-		if len(tasks) == 0:
-			DeleteTasks(username, token)
-			return HttpResponse("Success")
-		else:
-			PushTasks(username, token, group, tasks)
-			return HttpResponse("Success")
+		PushTasks(username, token, group, tasks, pos)
+		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
 	
@@ -210,27 +285,12 @@ def renamegroup(request):
 
 
 def index(request):
-	#For now, set user equal to me to test rendering of tasks
 	user = request.COOKIES.get('username')
 	if not user:
 		return redirect('/users/login')
 	token = request.COOKIES.get('token')
 	if not token:
 		return redirect('/users/login')
-	print(token)
-	groups = []
-	groupsraw = GetGroups(user, token)
-	for group in groupsraw:
-		tasksraw = GetTasks(user, token, group)
-		tasks = []
-		#Add Auth server and login stuff here
-		for rawtask in tasksraw:
-			tasklist = rawtask.split(',')
-			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
-		groups += [Group(group, tasks)]
-		tasklength = 1
-	for i in groups:
-		for g in i.items:
-			print(f'{i}-{g}-{g.done}')
+	groups = GetAllGroups(user, token)
 	grouplength = len(groups)
 	return render(request, 'tasklist.html', {'groups' : groups, 'name' : user, 'grouplength' : grouplength, 'needed': ["Tasks/js/taskadd.js", "Tasks/js/taskupdate.js", "Tasks/js/js.cookie.min.js", "Tasks/js/groupedit.js", "Tasks/js/sorts.js", "Tasks/js/jquery-sortable.js"]})
