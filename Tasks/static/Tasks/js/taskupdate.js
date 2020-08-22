@@ -1,3 +1,35 @@
+$(window).bind('beforeunload', function(){
+  $('.GroupButton').each(function(index, value){
+	  document.cookie = $(this).attr("group") + "-expanded=" + $(this).attr("aria-expanded") + "; path=/"
+	});
+});
+
+function SetExpandedOnCookies(){
+		$('.GroupButton').each(function(index, value){
+			expanded = Cookies.get($(this).attr("group") + "-expanded");
+			if (expanded == "" || expanded == undefined){
+				expand = false;
+			}
+			else{
+				if (expanded == "true"){
+					expand = true;
+				}
+				else{
+					expand = false;
+				}
+			}
+			
+			if (expand == true){
+				$("[id='" + $(this).attr("group") + "-collapse']").addClass("show");
+			}
+			else{
+				$(this).addClass('collapsed');
+			}
+			
+			$(this).attr('aria-expanded', expand);
+		});
+	}
+
 function HandleChanges(oldname, newname, type){
 	if (type == "task"){
 		$(".change-task[task='" + oldname + "']").each(function(){
@@ -198,6 +230,7 @@ function EndEdit(taskname){
 
 
 $(document).ready(function(){
+	SetExpandedOnCookies();
 	CreateCheckHandler();
 	CreateStartEditHandler();
 	CreateDeleteItemHandler();
