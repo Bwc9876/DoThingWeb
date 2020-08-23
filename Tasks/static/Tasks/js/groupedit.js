@@ -1,3 +1,22 @@
+function GetGroupItems(groupname){
+	items = [];
+	$(".item[group='" + groupname + "']").each(function(index, value){
+		items.push($(this).attr("taskraw"));
+	});
+	return items;
+}
+
+function AskBeforeDelete(groupname, groupraw){
+	if (GetGroupItems(groupname).length > 0){
+		$("#ConfirmDelete").attr("group", groupname);
+		$("#ConfirmDelete").attr("groupraw", groupraw);
+		$("#ConfirmDeleteModal").modal();
+	}
+	else{
+		DeleteGroup(groupname, groupraw);
+	}
+}
+
 function AddGroup(){
 	name = document.getElementById("GroupAddField").value;
 	done = "false";
@@ -46,15 +65,21 @@ function DeleteGroup(groupname, rawgroupname){
 		});	
 }
 
+function CreateModalButtonDeleteHandler(){
+	$("#ConfirmDelete").unbind().click(function(){
+		DeleteGroup($(this).attr("group"), $(this).attr("groupraw"));
+	});
+}
+
 function CreateGroupDeleteHandler(){
 	$(".GroupDelete").unbind().click(function(){
-		DeleteGroup($(this).attr("group"), $(this).attr("groupraw"));
+		AskBeforeDelete($(this).attr("group"), $(this).attr("groupraw"));
 	});
 }
 
 function UpdateGroupDeleteHandler(groupname){
 	$("[id='" + groupname + "-GroupDelete']").unbind().click(function(){
-		DeleteGroup($(this).attr("group"), $(this).attr("groupraw"));
+		AskBeforeDelete($(this).attr("group"), $(this).attr("groupraw"));
 	});
 }
 
@@ -168,5 +193,6 @@ $(document).ready(function(){
 	CreateStartGroupEditHandler();
 	CreateGroupAddHandler();
 	CreateGroupDeleteHandler();
+	CreateModalButtonDeleteHandler();
 	$(".GroupAddField").hide();
 });

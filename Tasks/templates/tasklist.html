@@ -1,10 +1,31 @@
 {% extends "base.html" %} {% block content %}
+	<div class="modal" id="ConfirmDeleteModal" tabindex="-1">
+		<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">Confirm Delete</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<p>This group is not empty, all tasks in it will be deleted, are you sure?</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">No</button>
+					<button type="button" class="btn btn-primary" data-dismiss="modal" id="ConfirmDelete" group="NONE" groupraw="NONE">Yes</button>
+				</div>
+			</div>
+		</div>
+	</div>
 	<div id="PageContainer">
 		<div class="ItemsDiv">
 		{% if grouplength == 0 %}
-			<h2 style="text-align:center;">You don't have any tasks</h2>
-			<input type="text" class="AddField" id="GroupAddField" name="GroupAddField">
-			<a class="GroupAdd FloatRight" id="GroupAdd"><img class="TaskAddIcon" src="https://img.icons8.com/material/24/000000/plus--v1.png"></a>
+			<h2 style="text-align:center;">Your Tasks</h2>
+			<div class="GroupAddSection">
+				<input placeholder="New Group Name" type="text" class="AddField" id="GroupAddField" name="GroupAddField">
+				<a class="GroupAdd FloatRight" id="GroupAdd"><img height="24px" width="24px" class="TaskAddIcon ColorChange" src="/static/Tasks/img/add.png" im="add"></a>
+			</div>
 		{%else%}
 			
 			<h2 style="text-align:center;">Your tasks</h2>
@@ -13,7 +34,7 @@
 					<div id="{{group.safename}}-Card" class="card list-item group-list-item" draggable=false groupraw="{{group.name}}" group="{{group.safename}}">
 						<div class="card-header" id="{{group.safename}}-header">
 						  <h2 class="mb-0">
-							<span class="group-handle GroupSortHandle"><img src="https://img.icons8.com/fluent-systems-filled/20/000000/move.png"/></span>
+							<span class="group-handle GroupSortHandle"><img height="22px" width="22px" src="/static/Tasks/img/move.png"/></span>
 							<button class="GroupButton btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#{{group.safename}}-collapse" aria-expanded="false" suffix="collapse" aria-controls="{{group.safename}}-collapse" groupraw="{{group.name}}" group="{{group.safename}}">
 								{{group.name}}
 							</button>
@@ -28,7 +49,7 @@
 								<div class="list-group list-group-flush TaskList" id="{{group.safename}}-List" groupraw="{{group.name}}" group="{{group.safename}}">
 									{% for task in group.items %}
 									<div class="list-group-item" taskraw="{{task.name}}"  task="{{task.safename}}" draggable=false>
-									<span class="handle"><img src="https://img.icons8.com/fluent-systems-filled/20/000000/move.png"/></span>
+									<span class="handle"><img height="22px" width="22px" src="/static/Tasks/img/move.png"/></span>
 									<input class="TaskCheck" taskraw="{{task.name}}"  task="{{task.safename}}" type="checkbox", id="{{task.safename}}-Check", groupraw="{{group.name}}" group="{{group.safename}}" name="{{task.safename}}-Check", value="Done", {% if task.done %} checked {%endif%}>
 									<label for="{{task.safename}}-Check"> {{task.name}} </label>
 									<input type="text" placeholder="New Item Name" class="NameField" id="{{task.safename}}-NameField" name="{{task.safename}}-NameField">
