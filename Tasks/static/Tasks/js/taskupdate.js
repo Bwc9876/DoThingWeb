@@ -89,7 +89,7 @@ function CreateCheckHandler(){
 	$(".TaskCheck").change(function(){
 		$.post("update", 
 		{
-			taskname: $(this).attr('taskraw'),
+			taskname: $(this).attr('task'),
 			done: $(this).is(':checked'),
 			group: $(this).attr('groupraw'),
 			name: Cookies.get("username"),
@@ -100,7 +100,7 @@ function CreateCheckHandler(){
 
 function CreateStartEditHandler(){
 	$(".TaskEdit").unbind().click(function(){
-		StartEdit($(this).attr("task"), $(this).attr("taskraw"));
+		StartEdit($(this).attr("task"), $(this).attr("task"));
 	});
 }
 
@@ -110,26 +110,26 @@ function CreateDeleteItemHandler(){
 	});
 }
 
-function UpdateStartEditHandler(taskname){
-	$("[id='" + taskname + "-Edit']").unbind().click(function(){
+function UpdateStartEditHandler(taskid){
+	$("[id='" + taskid + "-Edit']").unbind().click(function(){
 		StartEdit($(this).attr('task'));
 	});
 }
 
-function UpdateDeleteItemHandler(taskname){
-	$("[id='" + taskname + "-Delete']").unbind().click(function(){
+function UpdateDeleteItemHandler(taskid){
+	$("[id='" + taskid + "-Delete']").unbind().click(function(){
 		DeleteItem($(this).attr('task'), $(this).attr('groupraw'));
 	});
 }
 
-function UpdateEndEditHandler(taskname){
-	$("[id='" + taskname + "-Delete']").unbind().click(function(){
+function UpdateEndEditHandler(taskid){
+	$("[id='" + taskid + "-Delete']").unbind().click(function(){
 		EndEdit($(this).attr('task'));
 	});
 }
 
-function UpdateSubmitEditHandler(taskname){
-	$("[id='" + taskname + "-Edit']").unbind().click(function(){
+function UpdateSubmitEditHandler(taskid){
+	$("[id='" + taskid + "-Edit']").unbind().click(function(){
 		SubmitEdit($(this).attr('task'));
 	});
 }
@@ -148,8 +148,8 @@ function CheckForInvalidCharacters(instr){
 
 
 
-function SubmitEdit(taskname){
-		newname = document.getElementById(taskname + "-NameField").value;
+function SubmitEdit(taskid){
+		newname = document.getElementById(taskid + "-NameField").value;
 		if (newname == "" || newname == undefined){
 			$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Name Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			return;
@@ -161,9 +161,9 @@ function SubmitEdit(taskname){
 		$.post("update", 
 		{
 			newname: newname,
-			taskname: $("[id='" + taskname + "-Edit']").attr('taskraw'),
-			done: $("[id='" + taskname + "-Check']").is(':checked'),
-			group: $("[id='" + taskname + "-Edit']").attr('groupraw'),
+			taskname: taskid,
+			done: $("[id='" + taskid + "-Check']").is(':checked'),
+			group: $("[id='" + taskid + "-Edit']").attr('groupraw'),
 			name: Cookies.get("username"),
 			token: Cookies.get("token"),
 		},
@@ -178,17 +178,17 @@ function SubmitEdit(taskname){
 		});	
 }
 
-function DeleteItem(taskname, groupname){
+function DeleteItem(taskid, groupname){
 		$.post("remove", 
 		{
-			taskname: encodeURIComponent($("[id='" + taskname + "-Delete']").attr('taskraw')),
+			taskname: encodeURIComponent(taskid),
 			name: Cookies.get("username"),
 			group: groupname,
 			token: Cookies.get("token"),
 		},
 		function(data, status){
 			if (data == "Success"){
-				$(".list-group-item[task='" + taskname + "']").remove();
+				$(".list-group-item[task='" + taskid + "']").remove();
 				return;
 			}
 			else{
@@ -212,29 +212,29 @@ imgdict = {
 	"cancel_icon" : "/static/Tasks/img/delete.png",
 }
 
-function StartEdit(taskname){
+function StartEdit(taskid){
 	console.log("Start Edit");
 	$(".TaskEdit").each(function(index, value){
 		EndEdit($(this).attr('task'));
 	});
-	$("[id='" + taskname + "-EditIcon']").attr('src', imgdict.confirm_icon);
-	$("[id='" + taskname + "-EditIcon']").attr("im", "check");
-	$("[id='" + taskname + "-DeleteIcon']").attr('src', imgdict.cancel_icon);
-	$("[id='" + taskname + "-DeleteIcon']").attr("im", "delete");
-	$("[id='" + taskname + "-NameField']").show();
-	UpdateEndEditHandler(taskname);
-	UpdateSubmitEditHandler(taskname);
+	$("[id='" + taskid + "-EditIcon']").attr('src', imgdict.confirm_icon);
+	$("[id='" + taskid + "-EditIcon']").attr("im", "check");
+	$("[id='" + taskid + "-DeleteIcon']").attr('src', imgdict.cancel_icon);
+	$("[id='" + taskid + "-DeleteIcon']").attr("im", "delete");
+	$("[id='" + taskid + "-NameField']").show();
+	UpdateEndEditHandler(taskid);
+	UpdateSubmitEditHandler(taskid);
 }
 
 
-function EndEdit(taskname){
-	$("[id='" + taskname + "-EditIcon']").attr('src', imgdict.edit_icon);
-	$("[id='" + taskname + "-EditIcon']").attr("im", "edit");
-	$("[id='" + taskname + "-DeleteIcon']").attr('src', imgdict.delete_icon);
-	$("[id='" + taskname + "-DeleteIcon']").attr("im", "can");
-	$("[id='" + taskname + "-NameField']").hide();
-	UpdateStartEditHandler(taskname);
-	UpdateDeleteItemHandler(taskname);
+function EndEdit(taskid){
+	$("[id='" + taskid + "-EditIcon']").attr('src', imgdict.edit_icon);
+	$("[id='" + taskid + "-EditIcon']").attr("im", "edit");
+	$("[id='" + taskid + "-DeleteIcon']").attr('src', imgdict.delete_icon);
+	$("[id='" + taskid + "-DeleteIcon']").attr("im", "can");
+	$("[id='" + taskid + "-NameField']").hide();
+	UpdateStartEditHandler(taskid);
+	UpdateDeleteItemHandler(taskid);
 }
 
 

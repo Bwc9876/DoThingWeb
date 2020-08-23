@@ -1,4 +1,5 @@
 import os
+import random
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from BLib.Files.ReadWrite import GetLinesAsList, Touch
@@ -7,6 +8,23 @@ from BLib.Network.Formatting import RemoveNullTerminator
 from urllib.parse import unquote
 
 
+def GenID(username, token):
+	oldgroups = GetAllGroups(username, token)
+	masteritems = []
+	for i in oldgroups:
+		masteritems += i.items
+	while True:
+		attempted_id =  random.randint(1,10001)
+		if not IDExists(masteritems, attempted_id):
+			break
+	return attempted_id
+
+
+def IDExists(tasks, id):
+	for i in tasks:
+		if i.id == id:
+			return True
+	return False
 
 truefalse = {
 	"True" : True,
@@ -16,7 +34,8 @@ truefalse = {
 	}
 
 class Task:
-	def __init__(self, name, done):
+	def __init__(self, id, name, done):
+		self.id = id
 		self.name = name
 		self.done = done
 		self.safename = name.replace(' ', '_')
@@ -57,6 +76,17 @@ def GetTasks(name, token, group):
 	con.Close()
 	return updated_items
 	
+def CreateTaskList(tasksraw):
+	pos = tasksraw.pop(0)
+	if tasksraw[0] == "NONE":
+		return [], pos
+	tasks = []
+	for rawtask in tasksraw:
+		tasklist = rawtask.split(',')
+		tasks += [Task(tasklist[0], tasklist[1] ,truefalse[tasklist[2]])]
+	return tasks, pos
+	
+	
 def GetGroups(name, token):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'G/{name}/NULL/{token}')
@@ -74,9 +104,9 @@ def ItemtoText(items):
     out = ''
     for i in items:
         if items.index(i) == 0:
-            out += f'{i.name},{i.done}'
+            out += f'{i.id},{i.name},{i.done}'
         else:
-            out += f'\n{i.name},{i.done}'
+            out += f'\n{i.id},{i.name},{i.done}'
     return out
 	
 def PushTasks(name, token, group, item, pos):
@@ -127,19 +157,8 @@ def GetAllGroups(username, token, sort=True):
 		return []
 	for group in groupsraw:
 		tasksraw = GetTasks(username, token, group)
-		pos = tasksraw.pop(0)
-		if tasksraw[0] == "NONE":
-			groups += [Group(group, [], int(pos))]
-			continue
-		tasks = []
-		for rawtask in tasksraw:
-			tasklist = rawtask.split(',')
-			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
+		tasks, pos = CreateTaskList(tasksraw)
 		groups += [Group(group, tasks, int(pos))]
-		tasklength = 1
-	for i in groups:
-		for g in i.items:
-			print(f'{i}-{g}-{g.done}')
 	if len(groups) > 1 and sort:
 		groups.sort(key=lambda x: x.position)
 	if groups is None:
@@ -157,22 +176,21 @@ def UpdateItemOrder(request):
 			masteritems += i.items
 		itemdict = {}
 		for i in masteritems:
-			itemdict[i.name] = i
+			itemdict[i.id] = i
 		newgroups = newgroups.split('/')
 		newgroupobjects = []
 		for i in newgroups:
 			name = i.split(':')[0]
 			pos = i.split(':')[1]
-			items = i.split(':')[2]
+			item = i.split(':')[2]
 			itemobjects = []
-			for i in items.split(','):
-				if not i == '':
-					itemobjects += [itemdict[i]]
+			for l in item.split(','):
+				if not l == '':
+					itemobjects += [itemdict[l]]
 			newgroupobjects += [Group(name, itemobjects, pos)]
 		for i in newgroupobjects:
 			oldone = [x for x in oldgroups if x.name == i.name][0]
 			if not oldone.items == i.items:
-				print(i.name)
 				PushTasks(username, token, i.name, i.items, i.position)
 		return HttpResponse("Success")
 	else:
@@ -202,24 +220,20 @@ def updatetask(request):
 		ToUpdate = request.POST.get("taskname", "")
 		newname = request.POST.get("newname", "")
 		if newname == '':
-			newname = ToUpdate
+			newname = None
 		username = request.POST.get("name", "")
 		token = request.POST.get("token", "")
 		group = request.POST.get("group", "")
 		done = request.POST.get("done", "")
 		tasksraw = GetTasks(username, token, group)
-		pos = tasksraw.pop(0)
-		tasks = []
-		#Add Auth server and login stuff here
-		for rawtask in tasksraw:
-			tasklist = rawtask.split(',')
-			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
+		tasks, pos = CreateTaskList(tasksraw)
 		try:
-			ToUpdate = [x for x in tasks if x.name == ToUpdate][0]
+			ToUpdate = [x for x in tasks if x.id == ToUpdate][0]
 		except IndexError:
 			print(f"ERROR: NO ITEM BY NAME {ToUpdate}")
 			return HttpResponse("No Item By That Name")
-		ToUpdate.name = newname
+		if newname is not None:
+			ToUpdate.name = newname
 		ToUpdate.done = truefalse[done]
 		PushTasks(username, token, group, tasks, pos)
 		return HttpResponse("Success")
@@ -236,15 +250,8 @@ def addtask(request):
 		if group == "":
 			raise NameError("Group is empty!")
 		tasksraw = GetTasks(username, token, group)
-		pos = tasksraw.pop(0)
-		print(tasksraw)
-		tasks = []
-		if not tasksraw[0] == "NONE":
-			#Add Auth server and login stuff here
-			for rawtask in tasksraw:
-				tasklist = rawtask.split(',')
-				tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
-		tasks += [Task(ToUpdate, truefalse[done])]
+		tasks, pos = CreateTaskList(tasksraw)
+		tasks += [Task(GenID(username, token),ToUpdate, truefalse[done])]
 		if '' in tasks:
 			tasks.remove('')
 		PushTasks(username, token, group, tasks, pos)
@@ -259,16 +266,10 @@ def removetask(request):
 		username = request.POST.get("name", "")
 		token = request.POST.get("token", "")
 		group = request.POST.get("group", "")
-		print(f'TODELETE: {ToDelete}')
 		tasksraw = GetTasks(username, token, group)
-		tasks = []
-		pos = tasksraw.pop(0)
-		#Add Auth server and login stuff here
-		for rawtask in tasksraw:
-			tasklist = rawtask.split(',')
-			tasks += [Task(tasklist[0], truefalse[tasklist[1]])]
+		tasks, pos = CreateTaskList(tasksraw)
 		try:
-			ToDelete = [x for x in tasks if x.name == ToDelete][0]
+			ToDelete = [x for x in tasks if x.id == ToDelete][0]
 		except IndexError:
 			print(f"ERROR: NO ITEM BY NAME {ToDelete}")
 			return HttpResponse("No Item By That Name")

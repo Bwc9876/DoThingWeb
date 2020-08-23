@@ -1,6 +1,6 @@
-function ChangeGroup(groupname, rawgroupname, itemname){
-	$(".item[task='" + itemname + "']").attr("group", groupname);
-	$(".item[task='" + itemname + "']").attr("groupraw", groupname);
+function ChangeGroup(groupname, rawgroupname, taskid){
+	$(".item[task='" + taskid + "']").attr("group", groupname);
+	$(".item[task='" + taskid + "']").attr("groupraw", groupname);
 }
 
 function EditOrder( event, ui ){
@@ -9,7 +9,7 @@ function EditOrder( event, ui ){
 	$(".group-list-item").each(function(index, value){
 		items = [];
 		$(".item[group='" + $(this).attr("group") + "']").each(function(index, value){
-			items.push($(this).attr("taskraw"));
+			items.push($(this).attr("task"));
 		});
 		itemstring = items.join(",");
 		groups.push([$(this).attr("groupraw") + ":" + iter.toString() + ":" + itemstring]);
