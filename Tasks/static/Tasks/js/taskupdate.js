@@ -89,9 +89,9 @@ function CreateCheckHandler(){
 	$(".TaskCheck").change(function(){
 		$.post("update", 
 		{
-			taskname: $(this).attr('task'),
+			taskname: $(this).attr('taskraw'),
 			done: $(this).is(':checked'),
-			group: $(this).attr('group'),
+			group: $(this).attr('groupraw'),
 			name: Cookies.get("username"),
 			token: Cookies.get("token"),
 		});	
@@ -100,13 +100,13 @@ function CreateCheckHandler(){
 
 function CreateStartEditHandler(){
 	$(".TaskEdit").unbind().click(function(){
-		StartEdit($(this).attr("task"));
+		StartEdit($(this).attr("task"), $(this).attr("taskraw"));
 	});
 }
 
 function CreateDeleteItemHandler(){
 	$(".TaskDelete").unbind().click(function(){
-		DeleteItem($(this).attr('task'), $(this).attr('group'));
+		DeleteItem($(this).attr('task'), $(this).attr('groupraw'));
 	});
 }
 
@@ -118,7 +118,7 @@ function UpdateStartEditHandler(taskname){
 
 function UpdateDeleteItemHandler(taskname){
 	$("[id='" + taskname + "-Delete']").unbind().click(function(){
-		DeleteItem($(this).attr('task'), $(this).attr('group'));
+		DeleteItem($(this).attr('task'), $(this).attr('groupraw'));
 	});
 }
 
@@ -161,9 +161,9 @@ function SubmitEdit(taskname){
 		$.post("update", 
 		{
 			newname: newname,
-			taskname: $("[id='" + taskname + "-Edit']").attr('task'),
+			taskname: $("[id='" + taskname + "-Edit']").attr('taskraw'),
 			done: $("[id='" + taskname + "-Check']").is(':checked'),
-			group: $("[id='" + taskname + "-Edit']").attr('group'),
+			group: $("[id='" + taskname + "-Edit']").attr('groupraw'),
 			name: Cookies.get("username"),
 			token: Cookies.get("token"),
 		},
@@ -181,7 +181,7 @@ function SubmitEdit(taskname){
 function DeleteItem(taskname, groupname){
 		$.post("remove", 
 		{
-			taskname: encodeURIComponent($("[id='" + taskname + "-Delete']").attr('task')),
+			taskname: encodeURIComponent($("[id='" + taskname + "-Delete']").attr('taskraw')),
 			name: Cookies.get("username"),
 			group: groupname,
 			token: Cookies.get("token"),
@@ -200,18 +200,27 @@ function DeleteItem(taskname, groupname){
 function ChangeButtonText(id, newtext){
 	$("[id='" + id + "']").html(newtext);
 }
-edit_icon = "https://img.icons8.com/material-sharp/24/000000/edit.png";
-confirm_icon = "https://img.icons8.com/android/24/000000/checkmark.png";
-delete_icon = "https://img.icons8.com/material-rounded/24/000000/empty-trash.png";
-cancel_icon = "https://img.icons8.com/fluent-systems-regular/24/000000/delete-sign.png";
+
+imgdict = {
+	"edit_active" : "/static/Tasks/img/edit-active.png",
+	"confirm_active" : "/static/Tasks/img/check-active.png",
+	"delete_active" : "/static/Tasks/img/can-active.png",
+	"cancel_active" : "/static/Tasks/img/delete-active.png",
+	"edit_icon" : "/static/Tasks/img/edit.png",
+	"confirm_icon" : "/static/Tasks/img/check.png",
+	"delete_icon" : "/static/Tasks/img/can.png",
+	"cancel_icon" : "/static/Tasks/img/delete.png",
+}
 
 function StartEdit(taskname){
 	console.log("Start Edit");
 	$(".TaskEdit").each(function(index, value){
 		EndEdit($(this).attr('task'));
 	});
-	$("[id='" + taskname + "-EditIcon']").attr('src', confirm_icon);
-	$("[id='" + taskname + "-DeleteIcon']").attr('src', cancel_icon);
+	$("[id='" + taskname + "-EditIcon']").attr('src', imgdict.confirm_icon);
+	$("[id='" + taskname + "-EditIcon']").attr("im", "check");
+	$("[id='" + taskname + "-DeleteIcon']").attr('src', imgdict.cancel_icon);
+	$("[id='" + taskname + "-DeleteIcon']").attr("im", "delete");
 	$("[id='" + taskname + "-NameField']").show();
 	UpdateEndEditHandler(taskname);
 	UpdateSubmitEditHandler(taskname);
@@ -219,8 +228,10 @@ function StartEdit(taskname){
 
 
 function EndEdit(taskname){
-	$("[id='" + taskname + "-EditIcon']").attr('src', edit_icon);
-	$("[id='" + taskname + "-DeleteIcon']").attr('src', delete_icon);
+	$("[id='" + taskname + "-EditIcon']").attr('src', imgdict.edit_icon);
+	$("[id='" + taskname + "-EditIcon']").attr("im", "edit");
+	$("[id='" + taskname + "-DeleteIcon']").attr('src', imgdict.delete_icon);
+	$("[id='" + taskname + "-DeleteIcon']").attr("im", "can");
 	$("[id='" + taskname + "-NameField']").hide();
 	UpdateStartEditHandler(taskname);
 	UpdateDeleteItemHandler(taskname);
@@ -235,4 +246,11 @@ $(document).ready(function(){
 	CreateStartEditHandler();
 	CreateDeleteItemHandler();
 	$(".NameField").hide();
+	$(".ColorChange").mouseenter(function(){
+		$(this).attr("src", "/static/Tasks/img/" + $(this).attr("im") + "-active.png");
+	});
+	$(".ColorChange").mouseleave(function(){
+		$(this).attr("src", "/static/Tasks/img/" + $(this).attr("im") + ".png");
+	});
+	
 });

@@ -9,55 +9,55 @@
 }
 
 .GroupAddIcon{
-	background-color:none;
+	fill:none;
 }
 
 .GroupAddIcon:hover{
-	background-color:#79ff4d;
+	fill:green;
 }
 
 
 .GroupEditIcon{
-    background-color:none;
+    fill:none;
 }
 
 .GroupEditIcon:hover{
-    background-color:#33ccff;
+    fill:#33ccff;
 }
 
 .TaskDeleteIcon{
-	background-color:none;
+	fill:none;
 }
 
 .GroupDeleteIcon:hover{
-	background-color:#ff0000;
+	fill:#ff0000;
 }
 
 
 
 .TaskAddIcon{
-	background-color:none;
+	fill:none;
 }
 
 .TaskAddIcon:hover{
-	background-color:#79ff4d;
+	fill:green;
 }
 
 
 .TaskEditIcon{
-    background-color:none;
+    fill:black;
 }
 
 .TaskEditIcon:hover{
-    background-color:#33ccff;
+    fill:#33ccff;
 }
 
 .TaskDeleteIcon{
-	background-color:none;
+	fill:none;
 }
 
 .TaskDeleteIcon:hover{
-	background-color:#ff0000;
+	fill:#ff0000;
 }
 
 .AddField{
@@ -81,4 +81,14 @@
 .FloatRight{
 	float: right; 
 	cursor:pointer;
+}
+
+.GroupAddSection{
+	border-style: solid;
+	border-color: green;
+}
+
+.ItemAddSection{
+	border-style: solid;
+	border-color: green;
 }

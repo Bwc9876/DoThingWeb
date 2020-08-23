@@ -1,7 +1,6 @@
-function ChangeGroup(groupname, itemname){
-	console.log(".item[task='" + itemname + "']");
+function ChangeGroup(groupname, rawgroupname, itemname){
 	$(".item[task='" + itemname + "']").attr("group", groupname);
-	console.log($(".item[task='" + itemname + "']").attr("group"));
+	$(".item[task='" + itemname + "']").attr("groupraw", groupname);
 }
 
 function EditOrder( event, ui ){
@@ -10,14 +9,13 @@ function EditOrder( event, ui ){
 	$(".group-list-item").each(function(index, value){
 		items = [];
 		$(".item[group='" + $(this).attr("group") + "']").each(function(index, value){
-			items.push($(this).attr("task"));
+			items.push($(this).attr("taskraw"));
 		});
 		itemstring = items.join(",");
-		groups.push([$(this).attr("group") + ":" + iter.toString() + ":" + itemstring]);
+		groups.push([$(this).attr("groupraw") + ":" + iter.toString() + ":" + itemstring]);
 		iter += 1;
 	});
 	groupstring = groups.join("/");
-	console.log(groupstring);
 	$.post("item_order_update", 
 		{
 		newgroups: groupstring,
@@ -34,7 +32,7 @@ $(document).ready(function(){
 		handle: '.handle',
 		onUpdate: EditOrder,
 		onAdd: function(event, ui){
-			ChangeGroup($(event.to).attr("group"), $(event.item).attr("task"));
+			ChangeGroup($(event.to).attr("group"), $(event.to).attr("groupraw") ,$(event.item).attr("task"));
 			EditOrder( event, ui );
 		},
 	});
@@ -47,7 +45,7 @@ $(document).ready(function(){
 			groups = [];
 			iter = 0
 			$(".group-list-item").each(function(index, value){
-				groups.push([$(this).attr("group") + ":" + iter.toString()]);
+				groups.push([$(this).attr("groupraw") + ":" + iter.toString()]);
 				iter += 1;
 			});
 			groupstring = groups.join("/");

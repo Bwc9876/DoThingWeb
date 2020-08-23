@@ -79,7 +79,6 @@ $(".UserRegister").click(function(){
 				$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Internal Server Error" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 			}
 			else{
-				console.log(data);
 				document.cookie = "username=" + data.split("/")[0] + "; path=/;";
 				document.cookie = "token=" + data.split("/")[1] + "; path=/;";
 				window.location.href = "/";

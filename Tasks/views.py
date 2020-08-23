@@ -19,6 +19,7 @@ class Task:
 	def __init__(self, name, done):
 		self.name = name
 		self.done = done
+		self.safename = name.replace(' ', '_')
 	def __str__(self):
 		return self.name
 		
@@ -27,6 +28,7 @@ class Group:
 		self.name = name
 		self.items = items
 		self.position = position
+		self.safename = name.replace(' ', '_')
 	def __str__(self):
 		return self.name
 		
@@ -230,6 +232,8 @@ def addtask(request):
 		token = request.POST.get("token", "")
 		done = request.POST.get("done", "")
 		group = request.POST.get("group", "")
+		if group == "":
+			raise NameError("Group is empty!")
 		tasksraw = GetTasks(username, token, group)
 		pos = tasksraw.pop(0)
 		print(tasksraw)
