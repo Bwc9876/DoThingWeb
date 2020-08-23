@@ -1,4 +1,14 @@
 
+.CopyrightImage{
+	border-right-style: solid;
+	border-right-color: black;
+}
+
+.ActiveCopyrightImage{
+	border-left-style: solid;
+	border-left-color: black;
+}
+
 .UserForm{
 	margin-left:20vw; 
 	margin-right:20vw; 

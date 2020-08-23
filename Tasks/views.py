@@ -170,8 +170,10 @@ def UpdateItemOrder(request):
 					itemobjects += [itemdict[i]]
 			newgroupobjects += [Group(name, itemobjects, pos)]
 		for i in newgroupobjects:
-			print(f'{i.name}-{i.items}')
-			PushTasks(username, token, i.name, i.items, i.position)
+			oldone = [x for x in oldgroups if x.name == i.name][0]
+			if not oldone.items == i.items:
+				print(i.name)
+				PushTasks(username, token, i.name, i.items, i.position)
 		return HttpResponse("Success")
 	else:
 		return HttpResponse("Non-Post Request")
@@ -199,7 +201,6 @@ def updatetask(request):
 	if request.method == 'POST':
 		ToUpdate = request.POST.get("taskname", "")
 		newname = request.POST.get("newname", "")
-		print(f'[DEBUG]: newname: {newname}')
 		if newname == '':
 			newname = ToUpdate
 		username = request.POST.get("name", "")

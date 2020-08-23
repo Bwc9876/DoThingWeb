@@ -1,3 +1,8 @@
+.GroupEditField{
+	height:4vh;
+	margin-left:1vw;
+}
+
 .GroupSortHandle{
 	float:right;
 }

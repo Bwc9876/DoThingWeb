@@ -10,7 +10,7 @@ function AskBeforeDelete(groupname, groupraw){
 	if (GetGroupItems(groupname).length > 0){
 		$("#ConfirmDelete").attr("group", groupname);
 		$("#ConfirmDelete").attr("groupraw", groupraw);
-		$("#ConfirmDeleteModal").modal();
+		$("#ConfirmDeleteModal").modal("show");
 	}
 	else{
 		DeleteGroup(groupname, groupraw);
