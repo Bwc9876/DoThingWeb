@@ -6,6 +6,7 @@ from BLib.Files.ReadWrite import GetLinesAsList, Touch
 from BLib.Network.Connection import Connection
 from BLib.Network.Formatting import RemoveNullTerminator
 from urllib.parse import unquote
+from termcolor import cprint 
 
 
 def GenID(username, token):
@@ -53,21 +54,21 @@ class Group:
 		
 		
 def TokenErrorHandler(code):
-    errors = {
-        'IU' : 'The cached user does not exist',
-        'IT' : 'The cached token is invalid for the cached user',
-        'IE' : 'There was an internal server error'
-    }
-    try:
-        return errors[code]
-    except KeyError:
-        return False
+	errors = {
+		'IU' : 'The cached user does not exist',
+		'IT' : 'The cached token is invalid for the cached user',
+		'IE' : 'There was an internal server error'
+	}
+	try:
+		error_log(f'{errors[code]} When Attempting Authentication')
+		return errors[code]
+	except KeyError:
+		return False
 
 def GetTasks(name, token, group):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'R/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
-	print(code)
 	error = TokenErrorHandler(code)
 	if error:
 		return
@@ -91,7 +92,6 @@ def GetGroups(name, token):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'G/{name}/NULL/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
-	print(code)
 	error = TokenErrorHandler(code)
 	if error:
 		return
@@ -119,7 +119,6 @@ def PushTasks(name, token, group, item, pos):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'W/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
-	print(code)
 	error = TokenErrorHandler(code)
 	if error:
 		return
@@ -131,7 +130,6 @@ def RenameGroup(name, token, group, newname):
 	con = Connection('192.168.86.29', 8080)
 	con.Send(f'N/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
-	print(code)
 	error = TokenErrorHandler(code)
 	if error:
 		return
@@ -192,8 +190,10 @@ def UpdateItemOrder(request):
 			oldone = [x for x in oldgroups if x.name == i.name][0]
 			if not oldone.items == i.items:
 				PushTasks(username, token, i.name, i.items, i.position)
+		debug_log(f"User '{username}' updated task order (Not Printing It Though).")
 		return HttpResponse("Success")
 	else:
+		warn_log("Order Update Task Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 	
 def UpdateGroupOrder(request):
@@ -211,8 +211,10 @@ def UpdateGroupOrder(request):
 			partner.pos = i.split(':')[1]
 		for i in oldgroups:
 			PushTasks(username, token, i.name, i.items, i.pos)
+		debug_log(f"User '{username}' updated group order {newgroups}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Order Update Group Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 	
 def updatetask(request):
@@ -229,15 +231,19 @@ def updatetask(request):
 		tasks, pos = CreateTaskList(tasksraw)
 		try:
 			ToUpdate = [x for x in tasks if x.id == ToUpdate][0]
+			storename = ToUpdate.name
+			storedone = ToUpdate.done
 		except IndexError:
-			print(f"ERROR: NO ITEM BY NAME {ToUpdate}")
+			error_log(f"No Item By ID {ToUpdate}")
 			return HttpResponse("No Item By That Name")
 		if newname is not None:
 			ToUpdate.name = newname
 		ToUpdate.done = truefalse[done]
 		PushTasks(username, token, group, tasks, pos)
+		debug_log(f"User '{username}' updated task {storename}|{storedone}>{ToUpdate.name}|{ToUpdate.done}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Edit Task Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 		
 def addtask(request):
@@ -255,8 +261,10 @@ def addtask(request):
 		if '' in tasks:
 			tasks.remove('')
 		PushTasks(username, token, group, tasks, pos)
+		debug_log(f"User '{username}' added task {ToUpdate}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Add Task Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 		
 def removetask(request):
@@ -271,14 +279,16 @@ def removetask(request):
 		try:
 			ToDelete = [x for x in tasks if x.id == ToDelete][0]
 		except IndexError:
-			print(f"ERROR: NO ITEM BY NAME {ToDelete}")
+			error_log(f"Task Not Found: '{ToDelete}' (called by removetask)")
 			return HttpResponse("No Item By That Name")
 		tasks.remove(ToDelete)
 		if '' in tasks:
 			tasks.remove('')
 		PushTasks(username, token, group, tasks, pos)
+		debug_log(f"User '{username}' removed task {ToDelete.name}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Delete Task Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 	
 def creategroup(request):
@@ -288,22 +298,36 @@ def creategroup(request):
 		group = request.POST.get("group", "")
 		groups = GetAllGroups(username, token)
 		PushTasks(username, token, group, [], len(groups) + 1)
+		debug_log(f"User '{username}' created group {group}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Create Group Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 		
 def renamegroup(request):
 	if request.method == 'POST':
 		newname = request.POST.get("newname", "")
-		print(newname)
 		username = request.POST.get("name", "")
 		token = request.POST.get("token", "")
 		group = request.POST.get("group", "")
 		RenameGroup(username, token, group, newname)
+		debug_log(f"User '{username}' renamed group {group}>{newname}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Rename Group Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
-		
+
+def debug_log(text):
+	cprint(f"[DEBUG]", "grey", 'on_cyan', end=' ')
+	print(text)
+	
+def error_log(text):
+	cprint(f"[ERROR]", "grey", 'on_red', end=' ')
+	print(text)
+	
+def warn_log(text):
+	cprint(f"[WARNING]", "grey", 'on_yellow', end=' ')
+	print(text)
 		
 def delete_group(request):
 	if request.method == 'POST':
@@ -311,8 +335,10 @@ def delete_group(request):
 		token = request.POST.get("token", "")
 		group = request.POST.get("group", "")
 		DeleteTasks(username, group, token)
+		debug_log(f"User '{username}' deleted group {group}.")
 		return HttpResponse("Success")
 	else:
+		warn_log("Delete Group Attempt But Not POST!")
 		return HttpResponse("Non-Post Request")
 
 def index(request):
@@ -324,4 +350,5 @@ def index(request):
 		return redirect('/users/login')
 	groups = GetAllGroups(user, token)
 	grouplength = len(groups)
+	debug_log(f"User '{user}' loaded index.")
 	return render(request, 'tasklist.html', {'groups' : groups, 'name' : user, 'grouplength' : grouplength, 'needed': ["Tasks/js/js.cookie.min.js", "Tasks/js/taskadd.js", "Tasks/js/taskupdate.js", "Tasks/js/groupedit.js", "Tasks/js/sorts.js", "Tasks/js/jquery-sortable.js"]})

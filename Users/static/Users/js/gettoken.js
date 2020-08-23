@@ -3,11 +3,11 @@ function CheckForInvalidCharacters(instr){
 	not_allowed = ['/', '.', ',', ':', ';', '"', "'", '\\', '|', '+', '=', '_', '~', '`'];
 	for (i=0; i<not_allowed.length; i++){
 		if (instr.includes(not_allowed[i])){
-			return true;
+			return not_allowed[i];
 		}
 	}
 	
-	return false;
+	return "NO";
 	
 }
 
@@ -24,9 +24,10 @@ $(".UserLogin").click(function(){
 		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Password Cannot Be Blank" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 		return;
 	}
-	if (CheckForInvalidCharacters(username)){
-		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
-		return;
+	invalid = CheckForInvalidCharacters(username)
+	if (invalid !== "NO"){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + 'Invalid Character: ' + invalid + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+			return;
 	}
 	$.post("request/login", 
 		{
@@ -62,8 +63,9 @@ $(".UserRegister").click(function(){
 		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Password Too Short (7> characters)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 		return;
 	}
-	if (CheckForInvalidCharacters(username)){
-		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + "Invalid Character(s)" + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
+	invalid = CheckForInvalidCharacters(username)
+	if (invalid !== "NO"){
+		$('#PageContainer').prepend('<div class="alert alert-danger alert-dismissible fade show" role="alert">'  + 'Invalid Character: ' + invalid + '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span> </button></div>');
 		return;
 	}
 	$.post("request/register", 
