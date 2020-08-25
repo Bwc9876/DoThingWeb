@@ -1,87 +1,100 @@
-.GroupEditField{
-	height:4vh;
-	margin-left:1vw;
-}
-
-.GroupSortHandle{
-	float:right;
+.GroupButton{
+	float:left;
 }
 
 .ItemsDiv{
 	margin-left:10vw; 
 	margin-right:10vw; 
 	margin-top:5vh; 
+	margin-bottom:5vh; 
 }
 
-.GroupAddIcon{
-	fill:none;
+.TaskCheckLabel{
+	padding: 0px;
 }
 
-.GroupAddIcon:hover{
-	fill:green;
+.handle{
+	display:bock;
+	float:left;
+	
 }
 
-
-.GroupEditIcon{
-    fill:none;
+.handleIcon{
+	display:block;
 }
 
-.GroupEditIcon:hover{
-    fill:#33ccff;
-}
-
-.TaskDeleteIcon{
-	fill:none;
-}
-
-.GroupDeleteIcon:hover{
-	fill:#ff0000;
+.TaskCheckDiv{
+	float:left;
+	display:block;
 }
 
 
 
-.TaskAddIcon{
-	fill:none;
+.GroupHeader{
+	height:8vh;
+}	
+
+.HoverClick{
+	cursor:pointer;
 }
 
-.TaskAddIcon:hover{
-	fill:green;
+.GroupSortHandle{
+	float:left;
+	display:block;
+	padding-top:1vh;
+	padding-bottom:1vh;
+}
+
+.GroupHandleIcon{
+	display: block;
+}
+
+.GroupActionButton{
+	display:block;
+	padding-top: 1vh;
+    padding-bottom: 1vh;
+}
+
+.GroupActionIcon{
+	display:block;
 }
 
 
-.TaskEditIcon{
-    fill:black;
+.GroupLabelDiv{
+	float:left;
+	display:block;
 }
 
-.TaskEditIcon:hover{
-    fill:#33ccff;
+.GroupEditFieldDiv{
+	height: 6vh;
+	width: 11vw;
+	float: left;
+	display:block;
+	padding-top: 1vh;
+    padding-bottom: 1vh;
 }
 
-.TaskDeleteIcon{
-	fill:none;
+.GroupEditField{
+	height: 3vh;
+	float: left;
+	display:block;
+	font-size: 16px;
 }
 
-.TaskDeleteIcon:hover{
-	fill:#ff0000;
+
+.GroupEditField::-webkit-input-placeholder {
+  font-size: 16px;
+}
+.GroupEditField::-moz-placeholder {
+  font-size: 16px;
+}
+.GroupEditField:-ms-input-placeholder {
+  font-size: 16px;
+}
+.GroupEditField::placeholder {
+  font-size: 16px;
 }
 
-.AddField{
-	margin-top:16px; 
-	margin-bottom:25px; 
-	margin-left:21px;
-}
-
-.TaskAdd{
-	margin-right:19px; 
-	margin-top:16px; 
-	margin-bottom:25px;
-}
-
-.GroupAdd{
-	margin-right:19px; 
-	margin-top:16px; 
-	margin-bottom:25px;
-}
 
 .FloatRight{
 	float: right; 

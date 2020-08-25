@@ -31,7 +31,11 @@ truefalse = {
 	"True" : True,
 	"False" : False,
 	"true" : True,
-	"false" : False
+	"false" : False,
+	"true\\r\\n" : True,
+	"false\\r\\n" : False,
+	"True\\r\\n" : True,
+	"False\\r\\n" : False,
 	}
 
 class Task:
@@ -257,7 +261,7 @@ def addtask(request):
 			raise NameError("Group is empty!")
 		tasksraw = GetTasks(username, token, group)
 		tasks, pos = CreateTaskList(tasksraw)
-		tasks += [Task(GenID(username, token),ToUpdate, truefalse[done])]
+		tasks += [Task(GenID(username, token), ToUpdate, truefalse[done])]
 		if '' in tasks:
 			tasks.remove('')
 		PushTasks(username, token, group, tasks, pos)

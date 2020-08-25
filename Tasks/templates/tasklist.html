@@ -24,15 +24,19 @@
 			<div class="accordian list-group GroupList" id="grouplist">
 				{% for group in groups %}
 					<div id="{{group.safename}}-Card" class="card list-item group-list-item" draggable=false groupraw="{{group.name}}" group="{{group.safename}}">
-						<div class="card-header" id="{{group.safename}}-header">
+						<div class="card-header GroupHeader" id="{{group.safename}}-header">
 						  <h2 class="mb-0">
-							<span class="group-handle GroupSortHandle"><img class="ColorChange" im="move" height="22px" width="22px" src="/static/Tasks/img/move.png"/></span>
+							<span class="group-handle GroupSortHandle HoverClick"><img class="ColorChange HoverClick GroupHandleIcon" im="move" height="22px" width="22px" src="/static/Tasks/img/move.png"/></span>
+							<div class="GroupLabelDiv">
 							<button class="GroupButton btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#{{group.safename}}-collapse" aria-expanded="false" suffix="collapse" aria-controls="{{group.safename}}-collapse" groupraw="{{group.name}}" group="{{group.safename}}">
-								{{group.name}}
+								{{group.name}} 
 							</button>
+							</div>
+							<div class="GroupEditFieldDiv">
 							<input size="20" type="text" placeholder="New Group Name" class="NameField GroupEditField" id="GROUP-{{group.safename}}-NameField" name="GROUP-{{group.safename}}-NameField" name="GROUP-{{group.safename}}-NameField">
-							<a class="GroupEdit FloatRight" id="{{group.safename}}-GroupEdit" groupraw="{{group.name}}" group="{{group.safename}}" ><img height="24px" width="24px" class="GroupEditIcon ColorChange" id="{{group.safename}}-EditIcon" src="/static/Tasks/img/edit.png" im="edit"/></a>
-							<a class="GroupDelete FloatRight" id="{{group.safename}}-GroupDelete" groupraw="{{group.name}}" group="{{group.safename}}"><img height="24px" width="24px" class="GroupDeleteIcon ColorChange" id="{{group.safename}}-DeleteIcon" src="/static/Tasks/img/can.png" im="can"></a>
+							</div>
+							<a class="GroupEdit FloatRight GroupActionButton" id="{{group.safename}}-GroupEdit" groupraw="{{group.name}}" group="{{group.safename}}" ><img height="24px" width="24px" class="GroupEditIcon ColorChange GroupActionIcon" id="{{group.safename}}-EditIcon" src="/static/Tasks/img/edit.png" im="edit"/></a>
+							<a class="GroupDelete FloatRight GroupActionButton" id="{{group.safename}}-GroupDelete" groupraw="{{group.name}}" group="{{group.safename}}"><img height="24px" width="24px" class="GroupDeleteIcon ColorChange GroupActionIcon" id="{{group.safename}}-DeleteIcon" src="/static/Tasks/img/can.png" im="can"></a>
 						  </h2>
 						</div>
 
@@ -41,9 +45,11 @@
 								<div class="list-group list-group-flush TaskList" id="{{group.safename}}-List" groupraw="{{group.name}}" group="{{group.safename}}">
 									{% for task in group.items %}
 									<div class="list-group-item"   task="{{task.id}}" draggable=false>
-									<span class="handle"><img class="ColorChange" im="move" height="22px" width="22px" src="/static/Tasks/img/move.png"/></span>
+									<span class="handle HoverClick"><img class="ColorChange HoverClick handleIcon" im="move" height="22px" width="22px" src="/static/Tasks/img/move.png"/></span>
+									<div class="TaskCheckDiv">
 									<input class="TaskCheck"   task="{{task.id}}" type="checkbox", id="{{task.id}}-Check", groupraw="{{group.name}}" group="{{group.safename}}" name="{{task.id}}-Check", value="Done", {% if task.done %} checked {%endif%}>
-									<label for="{{task.id}}-Check"> {{task.name}}</label>
+									<label class="TaskCheckLabel" for="{{task.id}}-Check">{{task.name}}</label>
+									</div>
 									<input type="text" placeholder="New Item Name" class="NameField" id="{{task.id}}-NameField" name="{{task.id}}-NameField">
 									<a  class="TaskEdit FloatRight" id="{{task.id}}-Edit" groupraw="{{group.name}}" group="{{group.safename}}"   task="{{task.id}}"><img height="24px" width="24px" class="TaskEditIcon ColorChange" id="{{task.id}}-EditIcon" src="/static/Tasks/img/edit.png" im="edit"/></a>
 									<a  class="TaskDelete FloatRight item" id="{{task.id}}-Delete" groupraw="{{group.name}}" group="{{group.safename}}"   task="{{task.id}}"><img height="24px" width="24px" class="TaskDeleteIcon ColorChange" id="{{task.id}}-DeleteIcon" src="/static/Tasks/img/can.png" im="can"></a>
@@ -52,7 +58,7 @@
 								</div>
 								<div draggable=false class="ItemAddSection">
 									<input type="text" placeholder="New Item Name" groupraw="{{group.name}}" group="{{group.safename}}" class="AddField" id="{{group.safename}}-AddField" name="AddField">
-									<a class="TaskAdd FloatRight" groupraw="{{group.name}}" group="{{group.safename}}" id="{{group.safename}}-TaskAdd"><img height="24px" width="24px" class="TaskAddIcon ColorChange" src="/static/Tasks/img/add.png" im="add"></a>
+									<a class="TaskAdd FloatRight GroupAction" groupraw="{{group.name}}" group="{{group.safename}}" id="{{group.safename}}-TaskAdd"><img height="24vh" width="24vw" class="TaskAddIcon ColorChange" src="/static/Tasks/img/add.png" im="add"></a>
 								</div>
 						  </div>
 						</div>
