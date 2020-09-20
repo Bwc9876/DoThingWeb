@@ -20,7 +20,7 @@ from Home import views as Home_Views
 urlpatterns = [
     path('tasks/', include('Tasks.urls')),
 	path('users/', include('Users.urls')),
-    path('admin/', admin.site.urls),
 	path('', Home_Views.Home, name='home'),
 	path('copyright', Home_Views.Copyright, name='copyright'),
+	path('download', Home_Views.Download, name='download'),
 ]

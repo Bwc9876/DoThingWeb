@@ -9,6 +9,14 @@ from urllib.parse import unquote
 from termcolor import cprint 
 
 
+def Get_Server_Ip():
+	f = open("Server.config", "r")
+	ip = f.read()
+	f.close()
+	return ip
+
+
+
 def GenID(username, token):
 	oldgroups = GetAllGroups(username, token)
 	masteritems = []
@@ -70,7 +78,7 @@ def TokenErrorHandler(code):
 		return False
 
 def GetTasks(name, token, group):
-	con = Connection('192.168.86.29', 8080)
+	con = Connection(Get_Server_Ip(), 8080)
 	con.Send(f'R/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
@@ -93,7 +101,7 @@ def CreateTaskList(tasksraw):
 	
 	
 def GetGroups(name, token):
-	con = Connection('192.168.86.29', 8080)
+	con = Connection(Get_Server_Ip(), 8080)
 	con.Send(f'G/{name}/NULL/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
@@ -120,7 +128,7 @@ def PushTasks(name, token, group, item, pos):
 	else:
 		items = ["NONE"]
 	items.insert(0, str(pos))
-	con = Connection('192.168.86.29', 8080)
+	con = Connection(Get_Server_Ip(), 8080)
 	con.Send(f'W/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
@@ -131,7 +139,7 @@ def PushTasks(name, token, group, item, pos):
 	con.Close()
 	
 def RenameGroup(name, token, group, newname):
-	con = Connection('192.168.86.29', 8080)
+	con = Connection(Get_Server_Ip(), 8080)
 	con.Send(f'N/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
@@ -143,7 +151,7 @@ def RenameGroup(name, token, group, newname):
 	con.Close()
 	
 def DeleteTasks(name, group, token):
-	con = Connection('192.168.86.29', 8080)
+	con = Connection(Get_Server_Ip(), 8080)
 	con.Send(f'D/{name}/{group}/{token}')
 	code = con.WaitUntilRecv(format_incoming=RemoveNullTerminator)
 	error = TokenErrorHandler(code)
@@ -301,7 +309,7 @@ def creategroup(request):
 		token = request.POST.get("token", "")
 		group = request.POST.get("group", "")
 		groups = GetAllGroups(username, token)
-		PushTasks(username, token, group, [], len(groups) + 1)
+		PushTasks(username, token, group, [], len(groups))
 		debug_log(f"User '{username}' created group {group}.")
 		return HttpResponse("Success")
 	else:

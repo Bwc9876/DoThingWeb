@@ -5,3 +5,6 @@ def Home(request):
 	
 def Copyright(request):
 	return render(request, 'copyright.html')
+	
+def Download(request):
+	return render(request, 'download.html')

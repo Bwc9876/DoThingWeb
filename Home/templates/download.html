@@ -1,0 +1,78 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1 style="text-align:center"> Download DoThing </h1>
+
+<!-- Until the system is made public on github, the links will not work -->
+
+<div style="text-align: center; margin-bottom:3vh">
+
+	<h2 class="border-bottom; text-align:center"> Clients </h2>
+
+</div>
+
+<div class="d-flex" id="content" style="text-align:center; diplay: flex; justify-content: center;">
+
+	<div class="card" style="width: 18rem;">
+	  <img src="/static/Tasks/img/DoThing08Example.jpg" class="card-img-top" alt="...">
+	  <div class="card-body">
+		<h5 class="card-title">Android</h5>
+		<p class="card-text">DoThing for Android, download the apk, put it on your phone, and install it. (Intall apps from unknown sources needs to be on)</p>
+		<a href="https://github.com/Bwc9876/DoThingAndroid/releases/tag/Releases/latest/download/DoThingAndroid.apk" download="DoThingAndroid.apk" class="btn btn-primary">Download</a>
+	  </div>
+	</div>
+
+	<div class="card" style="width: 18rem;">
+	  <img height="276px" src="/static/Tasks/img/DoThingWebEx.PNG" class="card-img-top" alt="...">
+	  <div class="card-body">
+		<h5 class="card-title">Web</h5>
+		<p class="card-text">DoThing for Web, Click the link to go to the web version of DoThing. (Only if you're not hosting you're own DoThingWeb Server)</p>
+		<a href="/tasks" class="btn btn-primary">Go</a>
+	  </div>
+	</div>
+	
+	<div class="card" style="width: 18rem;">
+	  <div class="card-body">
+		<h5 class="card-title">Desktop (WIP)</h5>
+		<p class="card-text">DoThing for Desktop, currently a work inprogress, this is MEANT to work with all OSs, however for non-windows devices it might need additional setup</p>
+		<a href="/tasks" class="btn btn-primary disabled">Download</a>
+	  </div>
+	</div>
+
+</div>
+
+<div style="text-align: center; margin-bottom:3vh; margin-top: 2vh;">
+
+	<h2 class="text-align: center"> Servers </h2>
+
+</div>
+
+<div class="d-flex" id="servercontent" style="text-align:center; diplay: flex; justify-content: center;">
+
+	<div class="card" style="width: 18rem;">
+	  <div class="card-body">
+		<h5 class="card-title">Main Server</h5>
+		<p class="card-text">DoThing Main Server, allows you to host your own server for do thing (requires an auth server also being set up)</p>
+		<a href="https://github.com/Bwc9876/DoThingServer/releases/tag/Releases/latest/download/DoThingServer" class="btn btn-primary">Download</a>
+	  </div>
+	</div>
+
+	<div class="card" style="width: 18rem;">
+	  <div class="card-body">
+		<h5 class="card-title">Auth Server</h5>
+		<p class="card-text">DoThing Auth server, used for user authentication, needs a main server to also be set up. (Needs python 3.8)</p>
+		<a href="https://github.com/Bwc9876/DoThingAuth" class="btn btn-primary">Download</a>
+	  </div>
+	</div>
+
+	<div class="card" style="width: 18rem;">
+	  <div class="card-body">
+		<h5 class="card-title">Web Server</h5>
+		<p class="card-text">DoThing Web server, hosts a web version of do thing, needs both auth and main servers to be set up (Needs Python 3.8)</p>
+		<a href="https://github.com/Bwc9876/DoThingWeb" class="btn btn-primary">Download</a>
+	  </div>
+	</div>
+
+</div>
+
+
+{% endblock %}
