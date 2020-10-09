@@ -28,6 +28,12 @@
 	display:block;
 }
 
+.group-list-item{
+	
+	margin-bottom: 3vh;
+	
+}
+
 
 
 .GroupHeader{
@@ -81,6 +87,12 @@
 	font-size: 16px;
 }
 
+.ItemAddSection{
+	border-top-style: solid;
+	border-top-width: 0.2vh;
+	padding-top: 1vh;
+}
+
 
 .GroupEditField::-webkit-input-placeholder {
   font-size: 16px;
@@ -99,14 +111,4 @@
 .FloatRight{
 	float: right; 
 	cursor:pointer;
-}
-
-.GroupAddSection{
-	border-style: solid;
-	border-color: green;
-}
-
-.ItemAddSection{
-	border-style: solid;
-	border-color: green;
 }

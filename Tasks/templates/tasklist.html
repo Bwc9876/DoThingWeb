@@ -20,7 +20,7 @@
 	</div>
 	<div id="PageContainer">
 		<div class="ItemsDiv">
-		<h2 style="text-align:center;">Your tasks</h2>
+		<h2 style="text-align:center; margin-bottom:5vh;">Your tasks</h2>
 			<div class="accordian list-group GroupList" id="grouplist">
 				{% for group in groups %}
 					<div id="{{group.safename}}-Card" class="card list-item group-list-item" draggable=false groupraw="{{group.name}}" group="{{group.safename}}">
