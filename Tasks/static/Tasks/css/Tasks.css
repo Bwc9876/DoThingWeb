@@ -69,15 +69,17 @@
 .GroupLabelDiv{
 	float:left;
 	display:block;
+	width: 75%;
 }
 
 .GroupEditFieldDiv{
 	height: 6vh;
 	width: 11vw;
-	float: left;
+	float: right;
 	display:block;
 	padding-top: 1vh;
     padding-bottom: 1vh;
+	margin-right: 3vw;
 }
 
 .GroupEditField{
