@@ -1,9 +1,10 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 	{% load static %}
+	<script src="{% static '/Tasks/js/js.cookie.min.js' %}"></script>
 	<link rel="apple-touch-icon" sizes="180x180" href="{% static '/Tasks/fav/apple-touch-icon.png' %}">
 	<link rel="icon" type="image/png" sizes="32x32" href="{% static '/Tasks/fav/favicon-32x32.png' %}">
 	<link rel="icon" type="image/png" sizes="16x16" href="{% static '/Tasks/fav/favicon-16x16.png' %}">
@@ -11,19 +12,21 @@
 	<link rel="mask-icon" href="{% static '/Tasks/fav/safari-pinned-tab.svg' %}" color="#6c6c6c">
 	<meta name="msapplication-TileColor" content="#5d5d5d">
 	<meta name="theme-color" content="#5d5d5d">
-	
+	<meta name="description" content="DoThing For Web">
+	<title> DoThing for Web </title>
 	<script src="{% static '/Tasks/js/bootstrap/bootstrap.min.js' %}"> </script>
 	<script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 	{% for file in needed %}
 	<script src="{% static file %}"> </script>
 	{% endfor %}
+	<script src="{% static '/Base/js/theme.js' %}"></script>
 	<link rel="stylesheet" type="text/css" href="{% static 'Tasks/css/Tasks.css' %}">
 	<link rel="stylesheet" type="text/css" href="{% static 'Users/css/Users.css' %}">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">DoThing</a>
+<body class="Sub-BG" id="MainBody">
+<nav class="navbar navbar-expand-lg Sub-Prime">
+  <a class="navbar-brand Sub-Text" href="/"> {% load static %} <img style="margin-right:1vw;" src="{% static '/Tasks/fav/NavIcon.svg' %}" width=32px height=32px alt="DoThing Logo"> DoThing </a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapse" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -31,24 +34,32 @@
   <div class="collapse navbar-collapse" id="collapse">
 		<ul class="navbar-nav mr-auto mt-2 mt-lg-0">
 		<div class="nav-item">
-			<a class="nav-link" href="/download"> Download </a>
+			<a class="nav-link Sub-Text" href="/download"> Download </a>
 		</div>
 		<li class="nav-item dropdown">
-			<a class="nav-link dropdown-toggle" href="#" id="baseBarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				Web
+			<a class="nav-link dropdown-toggle Sub-Text" href="#" id="baseBarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				Web Viewer
 			</a>
-			<div class="dropdown-menu" aria-labelledby="baseBarDropdown">
-				<a class="dropdown-item" href="/tasks">Tasks</a>
-				<a class="dropdown-item" href="/users/login">Login</a>
-				<a class="dropdown-item" href="/users/register">Register</a>
-				<a class="dropdown-item" href="/copyright">Copyright</a>
+			<div class="dropdown-menu Sub-Prime" aria-labelledby="baseBarDropdown">
+				<a class="dropdown-item Sub-Text" href="/tasks">Tasks</a>
+				<a class="dropdown-item Sub-Text" href="/users/login">Login</a>
+				<a class="dropdown-item Sub-Text" href="/users/register">Register</a>
+				<a class="dropdown-item Sub-Text" href="/copyright">Copyright</a>
 			</div>
 		</li>
 		</ul>
   </div>
+  
+  <button id="ThemeSwitch" class="btn btn-sm btn-outline-secondary Invert Sub-Text Sub-BG" type="button">Light Mode</button>
+  
 </nav>
+
+<div class="Page">
+
 {% block content %}
 {% endblock %}
+
+</div>
 
 </body>
 </html>

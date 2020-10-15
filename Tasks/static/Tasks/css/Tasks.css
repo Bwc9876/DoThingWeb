@@ -1,5 +1,22 @@
+
+.GroupAddSection{
+
+	border-bottom-style: solid;
+	border-bottom-width: 0.3vh;
+	padding-top: 1vh;
+	margin-top: 1vh;
+	padding-bottom: 1vh;
+	margin-bottom: 2vh;
+	
+}
+
 .GroupButton{
 	float:left;
+	color: white;
+}
+
+.GroupButton:hover{
+	color: grey;
 }
 
 .ItemsDiv{
@@ -11,12 +28,17 @@
 
 .TaskCheckLabel{
 	padding: 0px;
+	color:white;
 }
 
 .handle{
 	display:bock;
 	float:left;
 	
+}
+
+.TaskList{
+	background-color:#343A40;
 }
 
 .handleIcon{
@@ -34,7 +56,25 @@
 	
 }
 
+.AddGroupLabel{
+	
+	float:left;
+	margin-right: 1.2vw;
+	
+}
 
+.TaskEditField{
+	
+	float:right;
+	
+}
+
+.AddItemLabel{
+	
+	float:left;
+	margin-right: 0.8vw;
+	
+}
 
 .GroupHeader{
 	height:8vh;
@@ -66,6 +106,10 @@
 }
 
 
+.list-group-item{
+}
+
+
 .GroupLabelDiv{
 	float:left;
 	display:block;
@@ -83,16 +127,18 @@
 }
 
 .GroupEditField{
-	height: 3vh;
+	height: 4vh;
 	float: left;
 	display:block;
 	font-size: 16px;
 }
 
 .ItemAddSection{
-	border-top-style: solid;
-	border-top-width: 0.2vh;
+	border-bottom-style: solid;
+	border-bottom-width: 0.3vh;
 	padding-top: 1vh;
+	margin-bottom: 2vh;
+	padding-bottom: 1vh;
 }
 
 

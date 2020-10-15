@@ -363,4 +363,4 @@ def index(request):
 	groups = GetAllGroups(user, token)
 	grouplength = len(groups)
 	debug_log(f"User '{user}' loaded index.")
-	return render(request, 'tasklist.html', {'groups' : groups, 'name' : user, 'grouplength' : grouplength, 'needed': ["Tasks/js/js.cookie.min.js", "Tasks/js/taskadd.js", "Tasks/js/taskupdate.js", "Tasks/js/groupedit.js", "Tasks/js/sorts.js", "Tasks/js/jquery-sortable.js"]})
+	return render(request, 'tasklist.html', {'groups' : groups, 'name' : user, 'grouplength' : grouplength, 'needed': ["Tasks/js/taskadd.js", "Tasks/js/taskupdate.js", "Tasks/js/groupedit.js", "Tasks/js/sorts.js", "Tasks/js/jquery-sortable.js"]})

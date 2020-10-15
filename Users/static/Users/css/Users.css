@@ -1,12 +1,12 @@
 
 .CopyrightImage{
 	border-right-style: solid;
-	border-right-color: black;
+	margin-right: 2vw;
 }
 
 .ActiveCopyrightImage{
 	border-left-style: solid;
-	border-left-color: black;
+	margin-left: 2vw;
 }
 
 .UserForm{
