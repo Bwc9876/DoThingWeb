@@ -12,7 +12,6 @@ const SubTypes = {
 
 function UpdateVars(){
 	
-	
 	for (var sub in SubTypes) {
 		
 		changes = SubTypes[sub];

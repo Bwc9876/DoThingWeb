@@ -22,7 +22,7 @@
 		<div class="ItemsDiv">
 		<h2 class="Sub-Text" style="text-align:center; margin-bottom:5vh;">Your tasks</h2>
 			<div class="GroupAddSection Sub-Border">
-				<h4 class="AddGroupLabel Sub-Text"> Add Group: </h3>
+				<label for="GroupAddField" class="AddGroupLabel Sub-Text"> Add Group: </label>
 				<input placeholder="New Group Name" type="text" class="AddField Sub-BG Sub-Text" id="GroupAddField" name="GroupAddField">
 				<a class="GroupAdd FloatRight" id="GroupAdd"><img alt="Add Group" class="TaskAddIcon ColorChange" src="/static/Tasks/img/add.png" im="add"></a>
 			</div>
@@ -48,8 +48,8 @@
 						<div id="{{group.safename}}-collapse" class="collapse" aria-labelledby="{{group.safename}}-header">
 						  <div class="card-body">
 								<div draggable=false class="ItemAddSection Sub-Border">
-										<h4 class="AddItemLabel Sub-Text"> Add Task: </h3>
-										<input type="text" placeholder="New Task Name" groupraw="{{group.name}}" group="{{group.safename}}" class="AddField Sub-BG Sub-Text" id="{{group.safename}}-AddField" name="AddField">
+										<label class="AddTaskLabel Sub-Text" for="{{group.safename}}-AddField"> Add Task: </label>
+										<input type="text" placeholder="New Task Name" groupraw="{{group.name}}" group="{{group.safename}}" class="AddField Sub-BG Sub-Text" id="{{group.safename}}-AddField" name="{{group.safename}}-AddField">
 										<a class="TaskAdd FloatRight GroupAction" groupraw="{{group.name}}" group="{{group.safename}}" id="{{group.safename}}-TaskAdd"><img alt="Add Task" class="TaskAddIcon ColorChange" src="/static/Tasks/img/add.png" im="add"></a>
 								</div>
 								<div class="list-group list-group-flush TaskList" id="{{group.safename}}-List" groupraw="{{group.name}}" group="{{group.safename}}">
