@@ -20,12 +20,12 @@ function UpdateVars(){
 			
 			if ($(this).hasClass("Invert")){
 				
-				$(this).css(changes[2], Cookies.get("dark") == "true"? changes[1] : changes [0])
+				$(this).css(changes[2], Cookies.get("dark") == "true"? changes[1] : changes [0]);
 				
 			}
 			else{
 				
-				$(this).css(changes[2], Cookies.get("dark") == "true"? changes[0] : changes [1])
+				$(this).css(changes[2], Cookies.get("dark") == "true"? changes[0] : changes [1]);
 				
 			}
 			

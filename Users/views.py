@@ -50,8 +50,6 @@ def Login(username, password):
 def UserLogin(request):
 	username = request.POST.get("username", "")
 	password = request.POST.get("password", "")
-	print(username)
-	print(password)
 	code = Login(username, password)
 	return HttpResponse(code)
 
@@ -64,8 +62,7 @@ def UserRegister(request):
 		error = False
 	except:
 		error = True
-	
-	print(code)
+
 	return HttpResponse(code)
 
 def LoginPage(request):
